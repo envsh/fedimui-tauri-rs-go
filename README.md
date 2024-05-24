@@ -14,3 +14,18 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+
+$ npm run
+Scripts available in tauriuirs@0.0.0 via `npm run-script`:
+  dev
+    vite
+  build
+    vue-tsc --noEmit && vite build
+  preview
+    vite preview
+  tauri
+    tauri
+
+* how make a install package
+  npm run tauri build? => package,dmg,
