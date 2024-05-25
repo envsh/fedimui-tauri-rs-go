@@ -7,7 +7,7 @@
 // const name = ref("");
 
 let items  = ["iii", "jjjjj"];
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100; i++) {
     // console.log(i+3);
     items.push("field字段"+i);
 }

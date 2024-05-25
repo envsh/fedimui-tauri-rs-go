@@ -2,11 +2,12 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
+import Msgview from "./components/Msgview.vue";
 </script>
 
 <template>
   <div class="container">
-    <h1>Welcome to Tauri!</h1>
+    <h3>Welcome to Tauri!</h3>
 
     <div class="row">
       <a href="https://vitejs.dev" target="_blank">
@@ -24,8 +25,19 @@ import Greet from "./components/Greet.vue";
 
     <Greet />
   </div>
+  <div class="container">
+    <Msgview />
+  </div>
 </template>
 
+<style >
+body {
+    background-color: #1a1a1a;
+    color: #fafafa;
+}
+</style>
+
+<!-- <style src="@/asserts/css/dark-mode.css"></style> -->
 <style scoped>
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
@@ -53,7 +65,7 @@ import Greet from "./components/Greet.vue";
 
 .container {
   margin: 0;
-  padding-top: 10vh;
+  padding-top: 1vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -61,8 +73,8 @@ import Greet from "./components/Greet.vue";
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 22px;
+  padding: 11px;
   will-change: filter;
   transition: 0.75s;
 }
