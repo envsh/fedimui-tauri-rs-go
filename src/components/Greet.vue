@@ -12,7 +12,9 @@ async function greet() {
 </script>
 
 <template>
+    
   <form class="row" @submit.prevent="greet">
+    <span> on the Tauri, Vite, and Vue logos to learn more.</span>
     <input id="greet-input" v-model="name" placeholder="Enter a name..." />
     <button type="submit">Greet</button>
   </form>

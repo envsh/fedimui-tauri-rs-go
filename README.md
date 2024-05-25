@@ -27,7 +27,7 @@ Scripts available in tauriuirs@0.0.0 via `npm run-script`:
   tauri
     tauri
 
-$ cargo create-tauri-app -- --beta
+$ cargo create-tauri-app projname --beta
 ✔ Choose which language to use for your frontend · TypeScript / JavaScript - (pnpm, yarn, npm, bun)
 ✔ Choose your package manager · npm
 ✔ Choose your UI template · Vue - (https://vuejs.org/)
@@ -54,5 +54,5 @@ For iOS development, run:
 
 
 * android todo:
-NDK_HOME=/usr/local/share/android-ndk npm run tauri android init
+NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/platforms/android-33/ npm run tauri android init
 NDK_HOME=/usr/local/share/android-ndk npm run tauri android dev

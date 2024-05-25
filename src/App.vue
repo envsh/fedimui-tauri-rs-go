@@ -6,10 +6,12 @@ import Msgview from "./components/Msgview.vue";
 </script>
 
 <template>
+    <hr/>
   <div class="container">
-    <h3>Welcome to Tauri!</h3>
+    <!-- <span>Welcome to Tauri!</span> -->
 
     <div class="row">
+        <span class="container">Welcome to Tauri!</span>
       <a href="https://vitejs.dev" target="_blank">
         <img src="/vite.svg" class="logo vite" alt="Vite logo" />
       </a>
@@ -21,10 +23,10 @@ import Msgview from "./components/Msgview.vue";
       </a>
     </div>
 
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
+    <!-- <p>Click on the Tauri, Vite, and Vue logos to learn more.</p> -->
     <Greet />
   </div>
+  <hr/>
   <div class="container">
     <Msgview />
   </div>
@@ -49,8 +51,8 @@ body {
 
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 15px;
+  line-height: 22px;
   font-weight: 400;
 
   color: #0f0f0f;
@@ -98,7 +100,7 @@ a:hover {
   color: #535bf2;
 }
 
-h1 {
+h1,h3 {
   text-align: center;
 }
 
