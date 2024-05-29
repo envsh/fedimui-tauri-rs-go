@@ -76,9 +76,9 @@ import Msgview from "./components/Msgview.vue";
 // app.use(VueVirtualScroller);
 
 let items  = ["iii", "jjjjj"];
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 300; i++) {
     // console.log(i+3);
-    items.push("field字段"+i);
+    items.push("field字段"+(300-i));
 }
 
 console.warn("hhehheeddd", items.length);
@@ -91,6 +91,102 @@ window.addEventListener('load', (evt) => {
 </script>
 
 <template>
+
+    <div  style="width: auto; height: 450px; ">
+        <div style="height:38px; width: 35%; ">
+            <table><tr><td><img src="../images/favicon.png" width="23px"/></td>
+                <td>Nickname<br/>&nbsp; sfffd</td>
+                <td>
+                    <form class="row">
+                    <input style="width: 25%;"/>
+                    <button type="submit">Greet</button>
+                </form>
+            </td>
+            </tr></table>
+        </div>
+        <div style="height: 79%; width: 35%; overflow-y: scroll;  background: #2a2a2a;">
+        <li v-for="item in items">
+            {{ item }} yyy
+        </li>
+        </div>
+        <div style="vertical-align: bottom; width: 35%; background: #666; position: absolute; top: 400px">
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+            <span><select name="ffff">
+                    <option>ffffff</option>
+                    <option>bbb</option>
+                    <option selected>tttooooooo</option>
+                    <option>eee</option>
+                    <option>www</option>
+            </select></span>
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+            <span><button>btn1</button></span>
+
+
+        </div>
+
+        <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
+            <div style="background-color: aqua;">
+                <span><button>btn1</button></span>
+                <span><button>btn1</button></span>
+                <span><select name="ffff">
+                    <option>ffffff</option>
+                    <option>bbb</option>
+                    <option selected>tttooooooo</option>
+                    <option>eee</option>
+                    <option>www</option>
+                </select></span>
+                <span><button>btn1</button></span>
+                <span><button>btn1</button></span>
+                <span><button>btn1</button></span>
+                
+            </div>
+
+            <div style="height:79%; width: 100%; overflow-y: scroll;">
+            <!-- <li v-for="item in items"> -->
+            <!-- {{ item }} yyy -->
+            <span v-for="item in items" style="width: 100%;" >
+                <table border="0" style=" width: 100%;">
+                    <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../images/border-diamonds.png" width="33px"/>
+                         </td>
+                        <td style="text-align:start; font-size: 12px; opacity: 0.5;"> feditype </td>
+                        <td> Sender name </td>
+                        <td> channnn </td>
+                        <td style="text-align: end; font-size: 12px; opacity: 0.5;"> tmmmmmm </td>
+                        <td rowspan="3" width="33px" style="vertical-align: top;"><img src="../images/border-diamonds.png" width="33px"/> </td>
+                    </tr>
+                    <tr><td colspan="4">
+
+                        {{item}} dddd oiajefwef
+                        aoiwej faowei fjoiwajefewf
+                        aoiwejfaowei fjoiwajefewf
+                        ouewr
+                        oiweppdfg
+                        
+                    </td></tr>
+                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span></td>
+                        <td colspan="2" style="text-align: end;font-size: 12px; opacity: 0.5;">reactions222
+                            <span><a href="">linktomsg</a></span>
+                        </td></tr>
+                </table>
+                <!-- <br/> -->
+            </span>
+            <!-- </li> -->
+            </div>
+
+            <div style="background-color: green; position: absolute; top: 400px; width: 100%;">
+                <span><img src="../images/favicon.png" width="33px"/><button>btn1</button></span>
+                <span><textarea rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
+                <!-- <span><input style="width: 198px;"></span> -->
+                <span><button>btn1</button></span>
+                <span><button>btn12</button></span>
+            </div>
+        </div>
+    </div>
 
     <hr/>
   <div class="container">
@@ -129,11 +225,7 @@ window.addEventListener('load', (evt) => {
     <Greet />
   </div>
   <hr/>
-  <div style="height:233px; overflow-y: scroll;">
-        <li v-for="item in items">
-            {{ item }} yyy
-        </li>
-    </div>
+
 
   <div class="container">
     <Msgview />
