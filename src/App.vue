@@ -1,14 +1,85 @@
 <script setup lang="ts">
+
+import { ref } from "vue";
+import { invoke } from "@tauri-apps/api/core";
+
+class ffiparam {
+    argc : number;
+//     argv : [];
+
+    retc : number;
+//     retv : [];
+
+//     errmsg: string;
+    code: number;
+};
+
+
+const greetMsg = ref("");
+const respmsg = ref("");
+const name = ref("");
+const name2 = ref("");
+
+async function callfwdgo(cmd : string, args : [any]) {
+  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+  let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
+//   console.log(prm);
+  respmsg.value = await invoke("callfwdgo", prm);
+  return respmsg.value;
+}
+
+async function cmd1(...args : [any]) {
+    let respval = await callfwdgo("cmd1", args);
+    let jso = JSON.parse(respval);
+    console.log(jso.retc, jso.retv);
+}
+async function addnum(...args : [any]) {
+    args.push(name2.value);
+    let respval = await callfwdgo("addnum", args);
+    let jso = JSON.parse(respval);
+    console.log(jso.retc, jso.retv);
+    greetMsg.value = jso.retv[0];
+}
+
+
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
 import Msgview from "./components/Msgview.vue";
+
+// import VueVirtualScroller from 'vue-virtual-scroller';
+// app.use(VueVirtualScroller);
+
+let items  = ["iii", "jjjjj"];
+for (let i = 0; i < 100; i++) {
+    // console.log(i+3);
+    items.push("field字段"+i);
+}
+console.log(items.length);
+console.warn("hhehheeddd");
+
 </script>
 
 <template>
     <hr/>
   <div class="container">
     <!-- <span>Welcome to Tauri!</span> -->
+
+    <form class="row" @submit.prevent="cmd1(123,456)">
+    <span> on the Tauri, Vite, and Vue logos to learn more.</span>
+    <input id="greet-input" v-model="name" placeholder="Enter a name..." />
+    <button type="submit">Greet</button>
+
+    <p>你好，{{ greetMsg }} 来自 rust 的问候。</p>
+  </form>
+
+  <form class="row" @submit.prevent="addnum(123,456)">
+    <span> on the Tauri, Vite, and Vue logos to learn more.</span>
+    <input id="greet-input" v-model="name2" placeholder="Enter a name..." />
+    <button type="submit">Greet</button>
+
+    <p>计算结果：{{ greetMsg }} 来自 rsffigo。</p>
+  </form>
 
     <div class="row">
         <span class="container">Welcome to Tauri!</span>
@@ -27,6 +98,12 @@ import Msgview from "./components/Msgview.vue";
     <Greet />
   </div>
   <hr/>
+  <div style="height:233px; overflow-y: scroll;">
+        <li v-for="item in items">
+            {{ item }} yyy
+        </li>
+    </div>
+
   <div class="container">
     <Msgview />
   </div>

@@ -19,4 +19,14 @@ tauri = { version = "2.0.0-beta", features = [] }
 tauri-plugin-shell = "2.0.0-beta"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+libc = "0.2.85"
+log = {version="0.4", features = ["max_level_debug", "release_max_level_warn"]}
+env_logger = "0.9"
+# default from index.crates.io
+# rspp = "0.1"
+# ok
+# rspp = {git = "https://github.com/kitech/rspp" , version="0.1"}
+# ok
+# rspp = { path = "$HOME/aprog/rspp", version="0.1" }
+rspp = { path = "../../../aprog/rspp", version="0.1" }
 
