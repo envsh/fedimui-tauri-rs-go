@@ -4,8 +4,11 @@ go 1.22.1
 
 require (
 	github.com/bitly/go-simplejson v0.5.1
-	github.com/kitech/gopp v0.0.0-20240527035035-956d14deccac
+	github.com/kitech/gopp v0.0.0-20240529110400-fd3f86d13e93
+// github.com/kitech/gopp/cgopp v0.0.0
 )
+
+// replace github.com/kitech/gopp/cgopp => ../../goplusplus/cgopp
 
 require (
 	github.com/Workiva/go-datastructures v1.1.3 // indirect

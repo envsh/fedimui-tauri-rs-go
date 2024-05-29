@@ -7,4 +7,4 @@ go:
 	cd src-go && go build
 
 rsdoc:
-	cd src-tauri && cargo doc --open -p log -p env_logger
+	cd src-tauri && cargo doc --open -p log -p env_logger -p tauri

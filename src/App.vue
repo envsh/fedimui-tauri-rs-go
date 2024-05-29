@@ -2,6 +2,7 @@
 
 import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
+import { emit, listen } from "@tauri-apps/api/event";
 
 class ffiparam {
     argc : number;
@@ -28,24 +29,48 @@ async function callfwdgo(cmd : string, args : [any]) {
   return respmsg.value;
 }
 
-async function cmd1(...args : [any]) {
+async function setupeventlisten() {
+    console.log("begin setup event listener");
+    const unlisten = await listen<string>('evtchan', (evt) => {
+    //console.log(evt.event, evt.payload.length, evt.payload);
+        let jso = JSON.parse(evt.payload);
+        console.log(evt.event, evt.payload.length, jso , "//");
+    })
+    console.log("after setup event listener");
+}
+
+async function cmd1(...args : any) {
     let respval = await callfwdgo("cmd1", args);
     let jso = JSON.parse(respval);
     console.log(jso.retc, jso.retv);
+
+
 }
-async function addnum(...args : [any]) {
+async function addnum(...args : any) {
     args.push(name2.value);
     let respval = await callfwdgo("addnum", args);
     let jso = JSON.parse(respval);
     console.log(jso.retc, jso.retv);
     greetMsg.value = jso.retv[0];
+
+    // remlog("log111", "v222", 333);
+}
+async function remlog(...args : any) {
+    args.push("fromts");
+    let respval = await callfwdgo("remlog", args);    
 }
 
+// console.log("start");
+// const unlisten = await listen<string>('evtchan', (evt) => {
+//     console.log(evt);
+// })
+// console.log("enddd");
 
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
 import Msgview from "./components/Msgview.vue";
+// import Empty from "./components/Empty.vue";
 
 // import VueVirtualScroller from 'vue-virtual-scroller';
 // app.use(VueVirtualScroller);
@@ -55,12 +80,18 @@ for (let i = 0; i < 100; i++) {
     // console.log(i+3);
     items.push("field字段"+i);
 }
-console.log(items.length);
-console.warn("hhehheeddd");
 
+console.warn("hhehheeddd", items.length);
+
+window.addEventListener('load', (evt) => {
+    console.log("window load", evt);
+    setupeventlisten();
+})
+///
 </script>
 
 <template>
+
     <hr/>
   <div class="container">
     <!-- <span>Welcome to Tauri!</span> -->

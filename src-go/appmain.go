@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	mrand "math/rand"
 	"time"
 	"unsafe"
 
 	spjson "github.com/bitly/go-simplejson"
 	"github.com/kitech/gopp"
+	"github.com/kitech/gopp/cgopp"
 )
 
 /*
@@ -22,8 +24,9 @@ import (
 #cgo CFLAGS: -I../src-tauri/target/x86_64-apple-darwin/debug/
 #cgo LDFLAGS: -L../src-tauri/target/x86_64-apple-darwin/debug/ -ltauriuirs_lib
 
-extern void taurirunasc(void*);
-extern void ffifuncproxy_rsc2go(void*);
+extern void taurirs_ffi_runasc(void*);
+extern void taurirs_ffi_funcproxy_rsc2go(void*);
+extern void taurirs_ffi_emitfwdts(uintptr_t);
 */
 import "C"
 
@@ -53,8 +56,8 @@ type cmdinfo struct {
 	Retv []any `json:"retv"`
 }
 
-//export ffifuncproxy_rsc2go
-func ffifuncproxy_rsc2go(vx unsafe.Pointer) {
+//export taurirs_ffi_funcproxy_rsc2go
+func taurirs_ffi_funcproxy_rsc2go(vx unsafe.Pointer) {
 	v := (*ffireqresp)(vx)
 	log.Println("hehehhee", v, time.Now())
 	reqdata := C.GoStringN(v.ptr, C.int(v.len))
@@ -102,6 +105,8 @@ func cmdrun(cio *cmdinfo) {
 			retval += v
 		}
 		cio.Retv = append(cio.Retv, retval)
+	case "remlog":
+		log.Println(cio.Argv...)
 	default:
 		retval := fmt.Sprintf("cmd %s unsupport, %v", cio.Cmd, time.Now())
 		cio.Retv = append(cio.Retv, retval)
@@ -110,5 +115,23 @@ func cmdrun(cio *cmdinfo) {
 
 func main() {
 	log.SetFlags(log.Flags() | log.Lshortfile ^ log.Ldate)
-	C.taurirunasc(unsafe.Pointer(C.ffifuncproxy_rsc2go))
+	go func() {
+		for i := 0; ; i++ {
+			gopp.SleepSec(2)
+			prm := &ffireqresp{}
+			cio := &cmdinfo{}
+			cio.Cmd = gopp.RandomStringPrintable(6)
+			cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
+			cio.Argc = len(cio.Argv)
+			scc := gopp.JsonMarshalMust(cio)
+			prm.len = usize(len(scc))
+			prm.ptr = C.CString(scc)
+			prmx := (uintptr)(unsafe.Pointer(prm))
+			C.taurirs_ffi_emitfwdts(C.uintptr_t(prmx))
+			// cgopp.Cfree3()
+			// C.free(unsafe.Pointer(prm.ptr))
+			cgopp.Cfree(unsafe.Pointer(prm.ptr))
+		}
+	}()
+	C.taurirs_ffi_runasc(unsafe.Pointer(C.taurirs_ffi_funcproxy_rsc2go))
 }
