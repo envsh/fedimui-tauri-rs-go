@@ -82,7 +82,7 @@ let items  = [{title:"iii",subtitle:"iiiooo"}, {title:"jjjjj",subtitle:"oooooo"}
 for (let i = 0; i < 300; i++) {
     // console.log(i+3);
     // items.push("field字段"+(300-i));
-    let item = {title:"field字段"+(300-i), subtitle: "field字段"+(300-i), prependAvatar:"images/favicon.png"};
+    let item = {title:"field字段"+(300-i), subtitle: "field字段"+(300-i), prependAvatar:"../images/favicon.png"};
     items.push(item);
 }
 // [ {type{subheader,divider}, title, inset,}, {prependAvatar,title,subtitle}]
@@ -162,7 +162,7 @@ async function sendmsg() {
     console.log(items3.value.length);
     let msgobj = {
         //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-        prependAvatar: "images/favicon.png",
+        prependAvatar: "../images/favicon.png",
           title: 'Recipe to try' + items3.value.length,
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           dtime: '',
@@ -189,10 +189,60 @@ function msglstScrollHeadTail(head : boolean){
     }
 }
 
+import Page1 from "./components/Page1.vue";
+import Page2 from "./components/Page2.vue";
+import Page3 from "./components/Page3.vue";
+
+let tabpage0show = ref(false);
+let tabpage1show = ref(false);
+let tabpage2show = ref(true);
+let tabpagerefs = [tabpage0show,tabpage1show,tabpage2show];
+
+function switchtabpage(idx : number) :number {
+    let oldidx = 0;
+    // hidden all first
+    for (let i = 0; i < tabpagerefs.length; i++) {
+        let curval = tabpagerefs[i].value;
+        if (curval != false) {
+            if (i == idx) {
+                return i; // nochange
+            }
+            tabpagerefs[i].value = false;
+            oldidx = i;
+        }
+    }
+    tabpagerefs[idx].value = true;
+    console.log("curidx " + oldidx + " => " + idx);
+
+    return oldidx;
+}
+function switchtabpagebyname(name : string) {
+    let idx = -1;
+    let m = new Map();
+    m.set("page0", 0);
+    m.set("page1", 1);
+    m.set("page2", 2);
+    idx = m.get(name);
+    
+    if (idx >= 0) {
+        switchtabpage(idx);
+    }
+}
 
 </script>
 
 <template>
+    <div>
+        <div v-show="tabpage0show" id="tabpage1">
+        <Page1/>
+        </div>
+        <div v-show="tabpage1show" id="tabpage2">
+        <Page2/>
+        </div>
+        <div v-show="tabpage2show" id="tabpage3">
+        <Page3/>
+        </div>
+    </div>
 
     <div  style="width: auto; height: 450px; ">
         <div style="height:38px; width: 35%; ">
@@ -243,8 +293,8 @@ function msglstScrollHeadTail(head : boolean){
 
         <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
             <div style="background-color: aqua;">
-                <span><button>btn1</button></span>
-                <span><button>btn1</button></span>
+                <span><button @click="switchtabpage(0)">btn1</button></span>
+                <span><button @click="switchtabpage(1)">btn2</button></span>
                 <span><select name="ffff">
                     <option>ffffff</option>
                     <option>bbb</option>
@@ -252,9 +302,9 @@ function msglstScrollHeadTail(head : boolean){
                     <option>eee</option>
                     <option>www</option>
                 </select></span>
-                <span><button>btn1</button></span>
-                <span><button>btn1</button></span>
-                <span><button>btn1</button></span>
+                <span><button>btn3</button></span>
+                <span><button>btn4</button></span>
+                <span><button>btn5</button></span>
                 <span><img @click="msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
