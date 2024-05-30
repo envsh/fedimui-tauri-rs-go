@@ -20,6 +20,7 @@ const greetMsg = ref("");
 const respmsg = ref("");
 const name = ref("");
 const name2 = ref("");
+const navidxval = ref(0);
 
 async function callfwdgo(cmd : string, args : [any]) {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -75,12 +76,58 @@ import Msgview from "./components/Msgview.vue";
 // import VueVirtualScroller from 'vue-virtual-scroller';
 // app.use(VueVirtualScroller);
 
-let items  = ["iii", "jjjjj"];
+let items  = [{title:"iii",subtitle:"iiiooo"}, {title:"jjjjj",subtitle:"oooooo"}];
 for (let i = 0; i < 300; i++) {
     // console.log(i+3);
-    items.push("field字段"+(300-i));
+    // items.push("field字段"+(300-i));
+    let item = {title:"field字段"+(300-i), subtitle: "field字段"+(300-i), prependAvatar:"images/favicon.png"};
+    items.push(item);
 }
-
+// [ {type{subheader,divider}, title, inset,}, {prependAvatar,title,subtitle}]
+let items2 = [
+        { type: 'subheader', title: 'Today' },
+        {
+          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+          title: 'Brunch this weekend?',
+          subtitle: `<span class="text-primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+        },
+        { type: 'divider', inset: true },
+        {
+          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+          title: 'Summer BBQ',
+          subtitle: `<span class="text-primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
+        },
+        { type: 'divider', inset: true },
+        {
+          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
+          title: 'Oui oui',
+          subtitle: '<span class="text-primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
+        },
+        { type: 'divider', inset: true },
+        {
+          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
+          title: 'Birthday gift',
+          subtitle: '<span class="text-primary">Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?',
+        },
+        { type: 'divider', inset: true },
+        {
+          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
+          title: 'Recipe to try',
+          subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
+        },
+      ];
+for (let i = 0; i < 30; i++) {
+    // console.log(i+3);
+    let item0 =  { type: 'divider', inset: true };
+    let item4 = {
+        //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
+        prependAvatar: "images/favicon.png",
+          title: 'Recipe to try',
+          subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
+        };
+    items2.push(item0);
+    items2.push(item4);
+}
 console.warn("hhehheeddd", items.length);
 
 window.addEventListener('load', (evt) => {
@@ -88,6 +135,10 @@ window.addEventListener('load', (evt) => {
     setupeventlisten();
 })
 ///
+
+function dummy() {
+    return "https://randomuser.me/api/portraits/women/8.jpg";
+}
 </script>
 
 <template>
@@ -105,9 +156,20 @@ window.addEventListener('load', (evt) => {
             </tr></table>
         </div>
         <div style="height: 79%; width: 35%; overflow-y: scroll;  background: #2a2a2a;">
-        <li v-for="item in items">
+        <!-- <li v-for="item in items">
             {{ item }} yyy
-        </li>
+        </li> -->
+
+        <v-list
+      :items="items2"
+      lines="one"
+      item-props
+    >
+      <template v-slot:subtitle="{ subtitle }">
+        <div v-html="subtitle"></div>
+      </template>
+    </v-list>
+
         </div>
         <div style="vertical-align: bottom; width: 35%; background: #666; position: absolute; top: 400px">
             <span><button>btn1</button></span>
@@ -143,7 +205,6 @@ window.addEventListener('load', (evt) => {
                 <span><button>btn1</button></span>
                 <span><button>btn1</button></span>
                 <span><button>btn1</button></span>
-                
             </div>
 
             <div style="height:79%; width: 100%; overflow-y: scroll;">
@@ -186,6 +247,7 @@ window.addEventListener('load', (evt) => {
                 <span><button>btn12</button></span>
             </div>
         </div>
+        
     </div>
 
     <hr/>
