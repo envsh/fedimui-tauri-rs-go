@@ -8,7 +8,7 @@ import {mylib as mylibc} from "./mylib"; // class mylib section in mylib.ts
 console.log(mylib.dummy());
 console.log(mylibc.dummy());
 
-import { emit, listen } from "@tauri-apps/api/event";
+// import { emit, listen } from "@tauri-apps/api/event";
 
 // remlog("ffff", 123, "456");
 

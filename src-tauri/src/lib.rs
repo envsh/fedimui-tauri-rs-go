@@ -7,7 +7,8 @@ extern crate env_logger;
 extern crate rspp;
 use tauri::Manager;
 
-use log::{debug, error, log_enabled, info, Level};
+// use log::{debug, error, log_enabled, info, Level};
+use log::{debug, error, warn, info};
 
 // demo code
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -21,7 +22,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet,callfwdgo])
         .setup(|app| {
-            let a2 : &mut tauri::App = app;
+            let _a2 : &mut tauri::App = app;
             let pkginfo = app.package_info();
             debug!("appsetup {} {}", pkginfo.name, pkginfo.version);
             let vno = rspp::globvarput(app);
@@ -73,6 +74,13 @@ fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {
     }
 
     }
+    if false {
+        unsafe {
+        info!("{} {}",123, rspp::globvars);
+        warn!("{}",123);
+        error!("{} {}",123, 456);
+        }
+    }
 }
 
 
@@ -89,6 +97,7 @@ static mut ffifuncproxy_rs2go : fn(_v:&rspp::ffiparam) = dummyfff;
 
 ////////////////
 
+#[allow(improper_ctypes_definitions)]
 #[no_mangle]
 pub extern "C"
 fn taurirs_ffi_runasc(fnptr : fn(v: &rspp::ffiparam)) {

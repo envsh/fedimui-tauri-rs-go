@@ -54,7 +54,11 @@ For iOS development, run:
 
 
 * android todo:
-NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/platforms/android-33/ npm run tauri android init
-NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/platforms/android-33/ JAVA_HOME=/nix/store/6wrwg9jhabsx0mbq0j4ximym65zd0i0h-zulu-ca-jdk-22.0.0/ npm run tauri android build
+NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk npm run tauri android init
+NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/ JAVA_HOME=/nix/store/6wrwg9jhabsx0mbq0j4ximym65zd0i0h-zulu-ca-jdk-22.0.0/ npm run tauri android build
 the dev need android vm
 NDK_HOME=/usr/local/share/android-ndk npm run tauri android dev
+
+
+* tauri.conf.json.bundle.target=all,app,
+    see https://tauri.app/v1/api/config/#bundleconfig.targets

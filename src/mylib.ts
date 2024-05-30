@@ -1,7 +1,7 @@
 
-function dummy() {
-    return "dummyfn from module global";
-}
+// function dummy() {
+//     return "dummyfn from module global";
+// }
 
 export class mylib {
     static dummy() {

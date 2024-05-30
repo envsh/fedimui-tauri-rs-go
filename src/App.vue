@@ -2,25 +2,26 @@
 
 import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
-import { emit, listen } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
+// import { emit, listen } from "@tauri-apps/api/event";
 
-class ffiparam {
-    argc : number;
-//     argv : [];
+// class ffiparam {
+//     argc : number;
+// //     argv : [];
 
-    retc : number;
-//     retv : [];
+//     retc : number;
+// //     retv : [];
 
-//     errmsg: string;
-    code: number;
-};
+// //     errmsg: string;
+//     code: number;
+// };
 
 
 const greetMsg = ref("");
 const respmsg = ref("");
 const name = ref("");
 const name2 = ref("");
-const navidxval = ref(0);
+// const navidxval = ref(0);
 
 async function callfwdgo(cmd : string, args : [any]) {
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -37,7 +38,7 @@ async function setupeventlisten() {
         let jso = JSON.parse(evt.payload);
         console.log(evt.event, evt.payload.length, jso , "//");
     })
-    console.log("after setup event listener");
+    console.log("after setup event listener", unlisten);
 }
 
 async function cmd1(...args : any) {
@@ -56,10 +57,11 @@ async function addnum(...args : any) {
 
     // remlog("log111", "v222", 333);
 }
-async function remlog(...args : any) {
-    args.push("fromts");
-    let respval = await callfwdgo("remlog", args);    
-}
+// async function remlog(...args : any) {
+//     args.push("fromts");
+//     let respval = await callfwdgo("remlog", args);
+    
+// }
 
 // console.log("start");
 // const unlisten = await listen<string>('evtchan', (evt) => {
@@ -90,6 +92,8 @@ let items2 = [
           prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: 'Brunch this weekend?',
           subtitle: `<span class="text-primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+          itemid: "",
+          dtime: "",
         },
         { type: 'divider', inset: true },
         {
@@ -121,7 +125,7 @@ for (let i = 0; i < 30; i++) {
     let item0 =  { type: 'divider', inset: true };
     let item4 = {
         //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-        prependAvatar: "images/favicon.png",
+        prependAvatar: "../images/favicon.png",
           title: 'Recipe to try' + i,
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           itemid: "mid"+i,
@@ -138,9 +142,9 @@ window.addEventListener('load', (evt) => {
 })
 ///
 
-function dummy() {
-    return "https://randomuser.me/api/portraits/women/8.jpg";
-}
+// function dummy() {
+//     return "https://randomuser.me/api/portraits/women/8.jpg";
+// }
 
 let msgiptdata = ref("");
 let items3 = ref(items2);
@@ -162,6 +166,7 @@ async function sendmsg() {
           title: 'Recipe to try' + items3.value.length,
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           dtime: '',
+          itemid: '',
         };
     msgobj.title = resobj.argv[0];
     msgobj.subtitle = ccobj.content;
@@ -176,6 +181,7 @@ async function sendmsg() {
 
 function msglstScrollHeadTail(head : boolean){
     let e = document.getElementById('msglstscrwin');
+    if (e == null) {return;}
     if (head ) {
         e.scrollTop = 0;
     }else {

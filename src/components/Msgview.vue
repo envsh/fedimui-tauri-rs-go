@@ -11,7 +11,7 @@
 // }
 
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
-import {RecycleScroller} from 'vue-virtual-scroller';
+// import {RecycleScroller} from 'vue-virtual-scroller';
 // App.components('RecycleScroller');
 
 // const greetMsg = ref("");
