@@ -1,3 +1,4 @@
+import { createPinia } from "pinia";
 import { createApp } from "vue";
 
 import App from "./App.vue";
@@ -24,12 +25,12 @@ const vuetify = createVuetify({
     theme: {
         defaultTheme: 'dark',
       },
-  })
-  
+  });
 
+const piniafy = createPinia();
 
 // createApp(App).mount("#app");
-createApp(App).use(vuetify).mount("#app");
+createApp(App).use(piniafy).use(vuetify).mount("#app");
 
 console.log("will run here???");
 

@@ -4,6 +4,9 @@ import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
+import {ssscp} from "./sharestatestore";
+const sss = ssscp();
+sss.useval = 1;
 
 // class ffiparam {
 //     argc : number;
@@ -74,9 +77,9 @@ async function addnum(...args : any) {
 import Greet from "./components/Greet.vue";
 import Msgview from "./components/Msgview.vue";
 // import Empty from "./components/Empty.vue";
-
 // import VueVirtualScroller from 'vue-virtual-scroller';
 // app.use(VueVirtualScroller);
+
 
 let items  = [{title:"iii",subtitle:"iiiooo"}, {title:"jjjjj",subtitle:"oooooo"}];
 for (let i = 0; i < 300; i++) {

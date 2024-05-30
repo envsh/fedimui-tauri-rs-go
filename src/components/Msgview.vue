@@ -1,8 +1,11 @@
 <script setup lang="ts">
 // import { Vue } from "vue";
-// import { ref } from "vue";
+import { ref } from "vue";
 // import { invoke } from "@tauri-apps/api/tauri";
 // import { VueVirtualScroller } from 'vue-virtual-scroller';
+import {ssscp} from "../sharestatestore";
+const sss = ssscp();
+sss.useval = 1;
 
 // export default {
 //     components: {
@@ -18,6 +21,7 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 // const name = ref("");
 
 let items  = ["iii", "jjjjj"];
+let itemsref = ref(items);
 for (let i = 0; i < 100; i++) {
     // console.log(i+3);
     items.push("field字段"+i);
