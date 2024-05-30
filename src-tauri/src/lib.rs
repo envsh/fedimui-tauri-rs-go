@@ -35,8 +35,8 @@ pub fn run() {
 
 ////////// extern
 
-#[tauri::command]
-fn callfwdgo(jstr: &str) -> String {
+#[tauri::command(async)]
+fn callfwdgo(jstr: String) -> String {
     log::debug!("reqdata={}", jstr);
     let prm = &mut rspp::ffiparam::default();
     prm.ptr = jstr.as_ptr() as usize;

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	mrand "math/rand"
 	"time"
@@ -52,8 +53,9 @@ type cmdinfo struct {
 	Argc int    `json:"argc"`
 	Argv []any  `json:"argv"`
 
-	Retc int   `json:"retc"`
-	Retv []any `json:"retv"`
+	Retc  int    `json:"retc"`
+	Retv  []any  `json:"retv"`
+	Dtime string `json:"dtime"`
 }
 
 //export taurirs_ffi_funcproxy_rsc2go
@@ -93,6 +95,7 @@ func cmdparse(prm *ffireqresp) (*cmdinfo, error) {
 	return cio, err
 }
 func cmdrun(cio *cmdinfo) {
+	var nowt = time.Now()
 	switch cio.Cmd {
 	case "cmd1":
 		retval := fmt.Sprintf("cmd %s res %v", cio.Cmd, time.Now())
@@ -107,10 +110,37 @@ func cmdrun(cio *cmdinfo) {
 		cio.Retv = append(cio.Retv, retval)
 	case "remlog":
 		log.Println(cio.Argv...)
+	case "sendmsg":
+
+		msg := cio.Argv[0].(string)
+		hc := gopp.NewHttpClient()
+		// curl -v https://fedind.netlify.app/.netlify/functions/api/ai/gptcf -XPOST -d '{"content":"hello 水世界"}'
+		hc.Timeout(16 * time.Second)
+		hc.Post("https://fedind.netlify.app/.netlify/functions/api/ai/gptcf")
+		hc.BodyJson(gopp.MapSA{"content": msg})
+		resp, err := hc.Do()
+		gopp.ErrPrint(err)
+
+		var bcc []byte
+		if err != nil {
+			var data = gopp.MapSA{"content": err.Error()}
+			bcc = []byte(gopp.JsonMarshalMust(data))
+			// cio.Retv = append(cio.Retv, err.Error())
+			// break
+		} else {
+			bcc, err = io.ReadAll(resp.Body)
+			gopp.ErrPrint(err)
+		}
+		// todo add feditype=gptcf
+		log.Println(string(bcc))
+
+		cio.Retv = append(cio.Retv, string(bcc))
+
 	default:
 		retval := fmt.Sprintf("cmd %s unsupport, %v", cio.Cmd, time.Now())
 		cio.Retv = append(cio.Retv, retval)
 	}
+	cio.Dtime = time.Since(nowt).String()
 }
 
 func main() {
@@ -131,6 +161,8 @@ func main() {
 			// cgopp.Cfree3()
 			// C.free(unsafe.Pointer(prm.ptr))
 			cgopp.Cfree(unsafe.Pointer(prm.ptr))
+
+			break
 		}
 	}()
 	C.taurirs_ffi_runasc(unsafe.Pointer(C.taurirs_ffi_funcproxy_rsc2go))

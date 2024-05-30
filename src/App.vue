@@ -122,8 +122,10 @@ for (let i = 0; i < 30; i++) {
     let item4 = {
         //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
         prependAvatar: "images/favicon.png",
-          title: 'Recipe to try',
+          title: 'Recipe to try' + i,
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
+          itemid: "mid"+i,
+          dtime: "dtime000",
         };
     items2.push(item0);
     items2.push(item4);
@@ -139,6 +141,49 @@ window.addEventListener('load', (evt) => {
 function dummy() {
     return "https://randomuser.me/api/portraits/women/8.jpg";
 }
+
+let msgiptdata = ref("");
+let items3 = ref(items2);
+async function sendmsg() {
+    // alert('aaa');
+    let words = "请使用中文回答以下问题, " + msgiptdata.value;
+    // let prms = callfwdgo("sendmsg", ["hello 世界!!!"]);
+    let prms = callfwdgo("sendmsg", [words]);
+    prms.then((restxt) => {
+        console.log(restxt);
+    let resobj = JSON.parse(restxt);
+    let retv0 = resobj.retv[0];
+    let ccobj = JSON.parse(retv0);
+    console.log(ccobj, ccobj.content, items2.length);
+    console.log(items3.value.length);
+    let msgobj = {
+        //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
+        prependAvatar: "images/favicon.png",
+          title: 'Recipe to try' + items3.value.length,
+          subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
+          dtime: '',
+        };
+    msgobj.title = resobj.argv[0];
+    msgobj.subtitle = ccobj.content;
+    msgobj.dtime = resobj.dtime;
+    items3.value.push(msgobj);
+
+    console.log(items3.value.length);
+    msglstScrollHeadTail(false);
+    })
+
+}
+
+function msglstScrollHeadTail(head : boolean){
+    let e = document.getElementById('msglstscrwin');
+    if (head ) {
+        e.scrollTop = 0;
+    }else {
+        e.scrollTop = e.scrollHeight;
+    }
+}
+
+
 </script>
 
 <template>
@@ -161,7 +206,7 @@ function dummy() {
         </li> -->
 
         <v-list
-      :items="items2"
+      :items="items3"
       lines="one"
       item-props
     >
@@ -188,7 +233,6 @@ function dummy() {
             <span><button>btn1</button></span>
             <span><button>btn1</button></span>
 
-
         </div>
 
         <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
@@ -205,33 +249,37 @@ function dummy() {
                 <span><button>btn1</button></span>
                 <span><button>btn1</button></span>
                 <span><button>btn1</button></span>
+                <span><img @click="msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
-            <div style="height:79%; width: 100%; overflow-y: scroll;">
+            <div id="msglstscrwin" style="height:79%; width: 100%; overflow-y: scroll;">
             <!-- <li v-for="item in items"> -->
             <!-- {{ item }} yyy -->
-            <span v-for="item in items" style="width: 100%;" >
+            <span v-for="item in items3" style="width: 100%;" >
                 <table border="0" style=" width: 100%;">
                     <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../images/border-diamonds.png" width="33px"/>
                          </td>
                         <td style="text-align:start; font-size: 12px; opacity: 0.5;"> feditype </td>
                         <td> Sender name </td>
-                        <td> channnn </td>
+                        <td> channnn {{ item.title }} </td>
                         <td style="text-align: end; font-size: 12px; opacity: 0.5;"> tmmmmmm </td>
                         <td rowspan="3" width="33px" style="vertical-align: top;"><img src="../images/border-diamonds.png" width="33px"/> </td>
                     </tr>
                     <tr><td colspan="4">
 
-                        {{item}} dddd oiajefwef
+                        <div v-html="item.subtitle"></div>
+                         <!-- dddd oiajefwef
                         aoiwej faowei fjoiwajefewf
                         aoiwejfaowei fjoiwajefewf
                         ouewr
                         oiweppdfg
-                        
+                         -->
                     </td></tr>
-                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span></td>
+                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span>
+                        <span> {{  item.itemid }}</span></td>
                         <td colspan="2" style="text-align: end;font-size: 12px; opacity: 0.5;">reactions222
                             <span><a href="">linktomsg</a></span>
+                            <span> {{  item.dtime }}</span>
                         </td></tr>
                 </table>
                 <!-- <br/> -->
@@ -241,10 +289,11 @@ function dummy() {
 
             <div style="background-color: green; position: absolute; top: 400px; width: 100%;">
                 <span><img src="../images/favicon.png" width="33px"/><button>btn1</button></span>
-                <span><textarea rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
+                <span><textarea v-model="msgiptdata" rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
                 <!-- <span><input style="width: 198px;"></span> -->
-                <span><button>btn1</button></span>
+                <span><button v-on:click="sendmsg()">Send!</button></span>
                 <span><button>btn12</button></span>
+                <span><img @click="msglstScrollHeadTail(false)" width="20px" src="../images/favicon.png" title="SCB: scroll to bottom"/></span>
             </div>
         </div>
         
