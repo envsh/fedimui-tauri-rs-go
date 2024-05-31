@@ -3,6 +3,17 @@
 //     return "dummyfn from module global";
 // }
 
+export class ffiparam {
+    argc = 0;
+    argv = [] ;
+
+    retc  = 0;
+    retv = [];
+
+    errmsg = "succ";
+    code = 0;
+};
+
 export class mylib {
     static dummy() {
         return "dummyfn from class static method";

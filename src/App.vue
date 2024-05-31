@@ -1,24 +1,14 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
+import { isRef } from "vue";
+import { toRef } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
 import {ssscp} from "./sharestatestore";
 const sss = ssscp();
 sss.useval = 1;
-
-// class ffiparam {
-//     argc : number;
-// //     argv : [];
-
-//     retc : number;
-// //     retv : [];
-
-// //     errmsg: string;
-//     code: number;
-// };
-
 
 const greetMsg = ref("");
 const respmsg = ref("");
@@ -192,30 +182,54 @@ function msglstScrollHeadTail(head : boolean){
     }
 }
 
+
+
 import Page1 from "./components/Page1.vue";
 import Page2 from "./components/Page2.vue";
 import Page3 from "./components/Page3.vue";
 
-let tabpage0show = ref(false);
-let tabpage1show = ref(false);
-let tabpage2show = ref(true);
-let tabpagerefs = [tabpage0show,tabpage1show,tabpage2show];
+
+// import { storeToRefs } from 'pinia'
+// const sssref = storeToRefs(sss);
+// let tabpagerefs = [
+//     // sssref.tabpage0show,
+//     // sssref.tabpage1show,
+//     // sssref.tabpage2show
+//     toRef(sss, "tabpage0show"),
+//     toRef(sss, "tabpage1show"),
+//     toRef(sss, "tabpage2show"),
+// ];
+// let tabpagerefs = [sss.tabpage0show,sss.tabpage1show,sss.tabpage2show];
+// let tabpagerefs = [tabpage0show,tabpage1show,tabpage2show];
+
+// let tabpagerefs = ref([false,false,true]);
+// let tabpagerefs = sss.tabpageons1;
 
 function switchtabpage(idx : number) :number {
+    const ons = sss.tabpageons1;
     let oldidx = 0;
+    try {
     // hidden all first
-    for (let i = 0; i < tabpagerefs.length; i++) {
-        let curval = tabpagerefs[i].value;
+    for (let i = 0; i < ons.length; i++) {
+        let curval = ons[i];
+        // 但是这里显示都是isRef=false?
+        // console.log("idx", i, "val", curval, isRef(ons[i]), isRef(ons), isRef(tabpagerefs) );
         if (curval != false) {
             if (i == idx) {
                 return i; // nochange
             }
-            tabpagerefs[i].value = false;
+            ons[i] = false;
+            // console.log(typeof sssref.tabpage1show);
+            // sss.tabpage1show =false;
+            // sss.commit('tabpage1show', false);
             oldidx = i;
         }
     }
-    tabpagerefs[idx].value = true;
+    ons[idx] = true;
     console.log("curidx " + oldidx + " => " + idx);
+    }catch(e) {
+        console.log(e);
+    }
 
     return oldidx;
 }
@@ -232,17 +246,23 @@ function switchtabpagebyname(name : string) {
     }
 }
 
+function upcnt() {
+    sss.useval++;
+}
+
 </script>
 
 <template>
+    <div > {{ sss.useval }} 
+        <span><button @click="upcnt()">upcnt</button></span></div>
     <div>
-        <div v-show="tabpage0show" id="tabpage1">
+        <div v-show="(sss.tabpageons1)[0]" id="tabpage1">
         <Page1/>
         </div>
-        <div v-show="tabpage1show" id="tabpage2">
+        <div v-show="(sss.tabpageons1)[1]" id="tabpage2">
         <Page2/>
         </div>
-        <div v-show="tabpage2show" id="tabpage3">
+        <div v-show="(sss.tabpageons1)[2]" id="tabpage3">
         <Page3/>
         </div>
     </div>
@@ -295,7 +315,7 @@ function switchtabpagebyname(name : string) {
         </div>
 
         <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
-            <div style="background-color: aqua;">
+            <div style="background-color:#666;">
                 <span><button @click="switchtabpage(0)">btn1</button></span>
                 <span><button @click="switchtabpage(1)">btn2</button></span>
                 <span><select name="ffff">
