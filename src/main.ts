@@ -1,5 +1,6 @@
 import { createPinia } from "pinia";
 import { createApp } from "vue";
+import { createLogger } from "vue-logger-plugin";
 
 import App from "./App.vue";
 
@@ -34,10 +35,27 @@ const vuetify = createVuetify({
 
 const piniafy = createPinia();
 
+const logger = createLogger({
+    enabled: true,
+    consoleEnabled: true,
+    level: 'debug',
+    callerInfo: true,
+    // prefixFormat: "pfxwww",
+    // default prefixFormat
+    // prefixFormat: ({ level, caller }) => (
+    //     caller
+    //       ? `[${level.toUpperCase()}] [${caller?.fileName}:${caller?.functionName}:${caller?.lineNumber}]`
+    //       : `[${level.toUpperCase()}]`
+    //   )
+    // beforeHooks: [ ... ],
+    // afterHooks: [ ... ]
+  });
+
 // createApp(App).mount("#app");
-createApp(App).use(piniafy).use(vuetify).mount("#app");
+createApp(App).use(logger).use(piniafy).use(vuetify).mount("#app");
 
 console.log("will run here???");
+logger.warn("fff");
 
 // const unlisten = await listen<string>('evtchan', (evt) => {
 // //     console.log(evt);

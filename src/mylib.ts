@@ -1,4 +1,14 @@
 
+// import { useLogger } from "vue-logger-plugin";
+// const log = useLogger();
+// const logger = require('pino')();
+import * as pino from 'pino';
+let log = pino.pino(); log.level = "debug";
+
+// console.log(pino);
+log.warn("hereeee by pino", log.level);
+log.debug("hereeee by pino");
+
 // export 就不会提示没有使用过的定义了
 
 export
@@ -60,6 +70,7 @@ class mylib {
 }
 
 import { invoke } from "@tauri-apps/api/core";
+import { debug, level } from 'winston';
 
 export default {
     aaa :  2,

@@ -19,5 +19,5 @@ async function greet() {
     <button type="submit">Greet</button>
   </form>
 
-  <p>你好，{{ greetMsg }} 来自 rust 的问候。page333</p>
+  <p>你好，{{ greetMsg }} 来自 rust 的问候。page222</p>
 </template>

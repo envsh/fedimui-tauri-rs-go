@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { useLogger } from "vue-logger-plugin";
+const log = useLogger();
 import { ref } from "vue";
 // import { isRef } from "vue";
 // import { toRef } from "vue";
@@ -9,7 +11,7 @@ import { listen } from "@tauri-apps/api/event";
 import * as ssg from "./sharestatestore";
 import {ssscp} from "./sharestatestore";
 const sss = ssscp(); sss.useval += 1;
-import * as mylibg from "./mylib";
+// import * as mylibg from "./mylib";
 
 
 async function setuptaurieventlisten() {
@@ -20,6 +22,7 @@ async function setuptaurieventlisten() {
         console.log(evt.event, evt.payload.length, jso , "//");
     })
     console.log("after setup tauri event listener", unlisten);
+    log.warn("hehhehhe",123);
 }
 
 
@@ -150,15 +153,15 @@ function switchtabpagebyname(name : string) {
     }
 }
 
-function upcnt() {
-    sss.useval++;
-}
+function upcnt() { sss.useval++; }
+function reloadui() { location.reload(); }
 
 </script>
 
 <template>
     <div > {{ sss.useval }} 
-        <span><button @click="upcnt()">upcnt</button></span></div>
+        <span><button @click="upcnt()">upcnt</button>
+            <button @click="reloadui()">reload</button></span></div>
 
     <div  style="width: auto; height: 450px; ">
         <div style="height:48px; width: 35%; background: cadetblue;">
