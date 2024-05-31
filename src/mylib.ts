@@ -3,11 +3,23 @@
 // const log = useLogger();
 // const logger = require('pino')();
 import * as pino from 'pino';
-let log = pino.pino(); log.level = "debug";
+// const getCaller = require('get-caller-file')
+let log = pino.pino();
+log.level = "debug";
 
 // console.log(pino);
 log.warn("hereeee by pino", log.level);
 log.debug("hereeee by pino");
+
+// Can't find variable: process
+// import * as winston from 'winston';
+// const winston = require('winston');
+// const log2 = winston.createLogger({
+//   level: 'debug',
+//   format: winston.format.json(),
+//   transports: [new winston.transports.Console()],
+// });
+// log2.info('Hello from Winston logger! by winston');
 
 // export 就不会提示没有使用过的定义了
 
