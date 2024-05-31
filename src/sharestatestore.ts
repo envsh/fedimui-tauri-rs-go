@@ -19,15 +19,22 @@ import { ref } from "vue";
 export let ssscp = defineStore({
     id: "ssscp",
     state: () => ({
+        // test data
         useval: ref(1), // for dummy
         items: ref([]),
         items2: ref([]),
         items3: ref([]),
+        // normal data
+        username: ref("Nickname"),
+        userident: ref("@ident"),
+        // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         msglst: ref([]),
         msgiptdata : ref(""),
+        // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
+        romlst: ref([]),
 
         tpcuridx1: ref(2),
-        tabpageons1: ref([false,false,true,false]), ///////////
+        tabpageons1: ref([false,true,false,false,false]), ///////////
         tabpageons2: ref([false,false,true]), ///////////
         tabpageons3: ref([false,false,true]), ///////////
         // tabwidget states

@@ -1,61 +1,27 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
-import { isRef } from "vue";
-import { toRef } from "vue";
-import { invoke } from "@tauri-apps/api/core";
+// import { isRef } from "vue";
+// import { toRef } from "vue";
+// import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
 import * as ssg from "./sharestatestore";
 import {ssscp} from "./sharestatestore";
 const sss = ssscp(); sss.useval += 1;
+import * as mylibg from "./mylib";
 
 
-const greetMsg = ref("");
-const respmsg = ref("");
-const name = ref("");
-const name2 = ref("");
-// const navidxval = ref(0);
-
-// async function callfwdgo(cmd : string, args : [any]) {
-//   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-//   let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
-// //   console.log(prm);
-//   respmsg.value = await invoke("callfwdgo", prm);
-//   return respmsg.value;
-// }
-
-async function setupeventlisten() {
-    console.log("begin setup event listener");
+async function setuptaurieventlisten() {
+    console.log("begin setup tauri event listener");
     const unlisten = await listen<string>('evtchan', (evt) => {
     //console.log(evt.event, evt.payload.length, evt.payload);
         let jso = JSON.parse(evt.payload);
         console.log(evt.event, evt.payload.length, jso , "//");
     })
-    console.log("after setup event listener", unlisten);
+    console.log("after setup tauri event listener", unlisten);
 }
 
-// async function cmd1(...args : any) {
-//     let respval = await callfwdgo("cmd1", args);
-//     let jso = JSON.parse(respval);
-//     console.log(jso.retc, jso.retv);
-
-
-// }
-// async function addnum(...args : any) {
-//     args.push(name2.value);
-//     let respval = await callfwdgo("addnum", args);
-//     let jso = JSON.parse(respval);
-//     console.log(jso.retc, jso.retv);
-//     greetMsg.value = jso.retv[0];
-
-//     // remlog("log111", "v222", 333);
-// }
-// async function remlog(...args : any) {
-//     args.push("fromts");
-//     let respval = await callfwdgo("remlog", args);
-    
-// }
 
 // console.log("start");
 // const unlisten = await listen<string>('evtchan', (evt) => {
@@ -82,40 +48,8 @@ for (let i = 0; i < 300; i++) {
     items.push(item);
 }
 // [ {type{subheader,divider}, title, inset,}, {prependAvatar,title,subtitle}]
-let items2 = [
-        { type: 'subheader', title: 'Today' },
-        {
-          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: `<span class="text-primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-          itemid: "",
-          dtime: "",
-        },
-        { type: 'divider', inset: true },
-        {
-          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ',
-          subtitle: `<span class="text-primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
-        },
-        { type: 'divider', inset: true },
-        {
-          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: '<span class="text-primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
-        },
-        { type: 'divider', inset: true },
-        {
-          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-          title: 'Birthday gift',
-          subtitle: '<span class="text-primary">Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?',
-        },
-        { type: 'divider', inset: true },
-        {
-          prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-          title: 'Recipe to try',
-          subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-        },
-      ];
+
+let romlst = sss.romlst;
 for (let i = 0; i < 30; i++) {
     // console.log(i+3);
     let item0 =  { type: 'divider', inset: true };
@@ -127,47 +61,25 @@ for (let i = 0; i < 30; i++) {
           itemid: "mid"+i,
           dtime: "dtime000",
         };
-    items2.push(item0);
-    items2.push(item4);
+
     (sss.msglst).push(item0);
     (sss.msglst).push(item4);
+    romlst.push(item0);
+    romlst.push(item4);
 }
 console.warn("hhehheeddd", items.length);
 
 window.addEventListener('load', (evt) => {
     console.log("window load", evt);
-    setupeventlisten();
+    setuptaurieventlisten();
 })
 ///
-
-// function dummy() {
-//     return "https://randomuser.me/api/portraits/women/8.jpg";
-// }
-
-
-let items3 = ref(items2);
 
 import Page1 from "./components/Page1.vue";
 // import Page2 from "./components/Page2.vue";
 // import Page3 from "./components/Page3.vue";
 import aboutui from "./components/about.vue";
-
-
-// import { storeToRefs } from 'pinia'
-// const sssref = storeToRefs(sss);
-// let tabpagerefs = [
-//     // sssref.tabpage0show,
-//     // sssref.tabpage1show,
-//     // sssref.tabpage2show
-//     toRef(sss, "tabpage0show"),
-//     toRef(sss, "tabpage1show"),
-//     toRef(sss, "tabpage2show"),
-// ];
-// let tabpagerefs = [sss.tabpage0show,sss.tabpage1show,sss.tabpage2show];
-// let tabpagerefs = [tabpage0show,tabpage1show,tabpage2show];
-
-// let tabpagerefs = ref([false,false,true]);
-// let tabpagerefs = sss.tabpageons1;
+import testui from "./components/testui.vue";
 
 // export 
 function switchtabpage(idx : number) :number {
@@ -247,44 +159,31 @@ function upcnt() {
 <template>
     <div > {{ sss.useval }} 
         <span><button @click="upcnt()">upcnt</button></span></div>
-    <!-- <div>
-        <div v-show="(sss.tabpageons1)[0]" id="tabpage1">
-        <Page1/>
-        </div>
-        <div v-show="(sss.tabpageons1)[1]" id="tabpage2">
-        <Page2/>
-        </div>
-        <div v-show="(sss.tabpageons1)[2]" id="tabpage3">
-        <Page3/>
-        </div>
-    </div> -->
 
     <div  style="width: auto; height: 450px; ">
-        <div style="height:38px; width: 35%; ">
-            <table><tr><td><img src="../images/favicon.png" width="23px"/></td>
-                <td>Nickname<br/>&nbsp; sfffd</td>
-                <td>
-                    <form class="row">
-                    <input style="width: 25%;"/>
-                    <button type="submit">Greet</button>
-                </form>
-            </td>
+        <div style="height:48px; width: 35%; background: cadetblue;">
+            <table border="0" width="100%"><tr><td>
+                <img src="../images/favicon.png" width="23px"/></td>
+                <td align="center" title="descccccc"> Nickname <br/>&nbsp;
+                    <span style="font-size: 12px;">sfffd{{ sss.useval }}</span> </td>
+                <td align="right">
+                    x<input style="width: 50%;" placeholder="keywords..."/>
+                    <button type="submit">SCH</button>
+                </td>
             </tr></table>
         </div>
-        <div style="height: 79%; width: 35%; overflow-y: scroll;  background: #2a2a2a;">
-        <!-- <li v-for="item in items">
-            {{ item }} yyy
-        </li> -->
 
-        <v-list
-      :items="items3"
-      lines="one"
-      item-props
-    >
-      <template v-slot:subtitle="{ subtitle }">
-        <div v-html="subtitle"></div>
-      </template>
-    </v-list>
+        <!-- chatroom list -->
+        <div style="height: 79%; width: 35%; overflow-y: scroll;  background: #2a2a2a;">
+            <!-- <li v-for="item in items">
+                {{ item }} yyy
+            </li> -->
+
+            <v-list :items="sss.romlst" lines="one" item-props>
+                <template v-slot:subtitle="{ subtitle }">
+                    <div v-html="subtitle"></div>
+                </template>
+            </v-list>
 
         </div>
         <div style="vertical-align: bottom; width: 35%; background: #666; position: absolute; top: 400px">
@@ -310,7 +209,7 @@ function upcnt() {
             <div style="background-color:#666;">
                 <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
                     </span>
-                <span><select >
+                <span title="tabpage list"><select >
                     <option v-for="val,idx in sss.tabpageons1" :selected="val"> {{ val }}.{{ idx }}</option>
                     </select></span>
                 <span><button @click="switchtabpage(1)">btn2</button></span>
@@ -328,27 +227,31 @@ function upcnt() {
             </div>
 
             <div id="rightwin" style="height:89%; width: 100%;">
-                <div v-show="(sss.tabpageons1)[0]" id="tabpage0">
+                <div v-show="(sss.tabpageons1)[0]" id="tabpage.page1ui">
                     <Page1/>
                 </div>
 
-                <div v-show="(sss.tabpageons1)[1]" id="tabpage1" style="height: 100%;">
+                <div v-show="(sss.tabpageons1)[1]" id="tabpage.msglstui" style="height: 100%;">
                     <div id="msglstscrwin" style="height: 89%; width: 100%; overflow-y: scroll;">
                         <Msgview/>
                     </div>
 
-                    <div style="background-color: green; position: absolute; top: 400px; width: 100%;">
+                    <div style="background-color:darkslategray; position: absolute; top: 400px; width: 100%;">
                         <msginputsend/>
                     </div>    
                 </div>
 
-                <div v-show="(sss.tabpageons1)[2]" id="tabpage2">
+                <div v-show="(sss.tabpageons1)[2]" id="tabpage.greetui">
                     <Greet/>
                 </div>
-                <div v-show="(sss.tabpageons1)[3]" id="tabpage3">
+                <div v-show="(sss.tabpageons1)[3]" id="tabpage.aboutui">
                     <aboutui/>
                 </div>
             
+                <div v-show="(sss.tabpageons1)[4]" id="tabpage.testui">
+                    <testui/>
+                </div>
+
             </div>
 
         </div>
@@ -356,43 +259,6 @@ function upcnt() {
     </div>
 
     <hr/>
-  <div class="container">
-    <!-- <span>Welcome to Tauri!</span> -->
-
-    <form class="row" @submit.prevent="cmd1(123,456)">
-    <span> on the Tauri, Vite, and Vue logos to learn more.</span>
-    <input id="greet-input" v-model="name" placeholder="Enter a name..." />
-    <button type="submit">Greet</button>
-
-    <p>你好，{{ greetMsg }} 来自 rust 的问候。</p>
-  </form>
-
-  <form class="row" @submit.prevent="addnum(123,456)">
-    <span> on the Tauri, Vite, and Vue logos to learn more.</span>
-    <input id="greet-input" v-model="name2" placeholder="Enter a name..." />
-    <button type="submit">Greet</button>
-
-    <p>计算结果：{{ greetMsg }} 来自 rsffigo。</p>
-  </form>
-
-    <div class="row">
-        <span class="container">Welcome to Tauri!</span>
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-
-    <!-- <p>Click on the Tauri, Vite, and Vue logos to learn more.</p> -->
-    <Greet />
-  </div>
-  <hr/>
-
 
   <!-- <div class="container">
     <Msgview />
@@ -473,9 +339,9 @@ h1,h3 {
 
 input,
 button {
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.1em 0.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;

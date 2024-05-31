@@ -40,7 +40,9 @@ async function sendmsg() {
 
 }
 
-
+// function checksendkey() {
+//     console.log(evt);
+// }
 
 </script>
 
@@ -48,14 +50,15 @@ async function sendmsg() {
 
     <span><img src="../../images/favicon.png" width="33px"/><button>btn1</button></span>
 
-    <span><textarea v-model="sss.msgiptdata" rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
+    <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
 
     <!-- <span><input style="width: 198px;"></span> -->
     <span><button v-on:click="sendmsg()">Send!</button></span>
 
     <span><button>btn12</button></span>
 
-    <span><img @click="ssg.msglstScrollHeadTail(false)" width="20px" src="../../images/favicon.png" title="SCB: scroll to bottom"/></span>
+    <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px" src="../../images/favicon.png" title="SCB: scroll to bottom"/></span>
 
 
 </template>
+
