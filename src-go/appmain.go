@@ -19,12 +19,6 @@ import (
 #include <stdlib.h>
 #include <string.h>
 
-// #cgo CFLAGS: -I../src-tauri/target/debug/
-// #cgo LDFLAGS: -L../src-tauri/target/debug/ -ltauriuirs
-
-#cgo CFLAGS: -I../src-tauri/target/x86_64-apple-darwin/debug/
-#cgo LDFLAGS: -L../src-tauri/target/x86_64-apple-darwin/debug/ -ltauriuirs_lib
-
 extern void taurirs_ffi_runasc(void*);
 extern void taurirs_ffi_funcproxy_rsc2go(void*);
 extern void taurirs_ffi_emitfwdts(uintptr_t);

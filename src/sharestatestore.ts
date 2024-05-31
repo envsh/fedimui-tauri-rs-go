@@ -94,11 +94,13 @@ async function msglstScrollHeadTail(head : boolean){
     // e.scrollTop = head ? 0 : e.scrollHeight;
 }
 
-export function docelembyid(id) { return document.getElementById(id); }
-export function docelembytag(id) { return document.getElementsByTagName(id); }
+export function docelembyid(id:string) { return document.getElementById(id); }
+export function docelembytag(id:string) { return document.getElementsByTagName(id); }
 
-export function wineventwatch(id) {
+export function wineventwatch(id:string) {
+    console.log(id);
     window.addEventListener(id, ()=>{
+        console.log(id);
     });
 }
 

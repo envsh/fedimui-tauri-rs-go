@@ -10,7 +10,7 @@ let tabpagerefs = ref([false,false,true]);
 // from sharestatestore.ts which ss.tabpageons=ref([boolean])
 // let tabpagerefs = sss.tabpageons);
 
-function switchtabpage(idx: number) {}
+function switchtabpage(_idx: number) {}
 window.addEventListener('load',  (evt) => {
     console.log("window load", evt);
     switchtabpage(1);

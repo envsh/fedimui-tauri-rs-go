@@ -62,3 +62,8 @@ NDK_HOME=/usr/local/share/android-ndk npm run tauri android dev
 
 * tauri.conf.json.bundle.target=all,app,
     see https://tauri.app/v1/api/config/#bundleconfig.targets
+
+* https://vardhan-justlikethat.blogspot.com/2012/05/android-solution-install-parse-failed.html
+    INSTALL_PARSE_FAILED_NO_CERTIFICATES
+
+* npm run dev CPU 可能达到220% 。。。

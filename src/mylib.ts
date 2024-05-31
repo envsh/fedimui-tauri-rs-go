@@ -32,11 +32,11 @@ function dummy() {
 
 // todo result format
 export
-async function callfwdgo(cmd : string, args : [any]) : Promise<unknown> {
+async function callfwdgo(cmd : string, args : [any]) : Promise<string> {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
   //   console.log(prm);
-    let retval = await invoke("callfwdgo", prm);
+    let retval = await invoke<string>("callfwdgo", prm);
     return retval;
 }
 
@@ -82,7 +82,7 @@ class mylib {
 }
 
 import { invoke } from "@tauri-apps/api/core";
-import { debug, level } from 'winston';
+// import { debug, level } from 'winston';
 
 export default {
     aaa :  2,
