@@ -4,8 +4,7 @@ import { ref } from "vue";
 // import { invoke } from "@tauri-apps/api/tauri";
 // import { VueVirtualScroller } from 'vue-virtual-scroller';
 import {ssscp} from "../sharestatestore";
-const sss = ssscp();
-sss.useval = 1;
+const sss = ssscp(); sss.useval += 1;
 
 // export default {
 //     components: {
@@ -29,49 +28,44 @@ for (let i = 0; i < 100; i++) {
 console.log(items.length);
 console.warn("hhehheeddd");
 
-
-
 </script>
 
-
-
 <template>
-    <!-- <div style="height:233px; overflow-y: scroll;"> -->
-        <!-- <RecycleScroller class="scroller" :items="items" :item-size="32" v-slot="{ item }" >
-        <div class="user">
-            {{ item }} xxx
-        </div>
-    </RecycleScroller> -->
-    <!-- </div> -->
 
-    <!-- <div style="height:233px; overflow-y: scroll;">
-        <li v-for="item in items">
-            {{ item }} yyy
-        </li>
-    </div> -->
+            <!-- <li v-for="item in items"> -->
+            <!-- {{ item }} yyy -->
+            <span v-for="item in sss.msglst" style="width: 100%;" >
+                <table border="0" style=" width: 100%;">
+                    <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../../images/border-diamonds.png" width="33px"/>
+                         </td>
+                        <td style="text-align:start; font-size: 12px; opacity: 0.5;"> feditype </td>
+                        <td> Sender name </td>
+                        <td> channnn {{ item.title }} </td>
+                        <td style="text-align: end; font-size: 12px; opacity: 0.5;"> tmmmmmm </td>
+                        <td rowspan="3" width="33px" style="vertical-align: top;"><img src="../../images/border-diamonds.png" width="33px"/> </td>
+                    </tr>
+                    <tr><td colspan="4">
+
+                        <div v-html="item.subtitle"></div>
+                         <!-- dddd oiajefwef
+                        aoiwej faowei fjoiwajefewf
+                        aoiwejfaowei fjoiwajefewf
+                        ouewr
+                        oiweppdfg
+                         -->
+                    </td></tr>
+                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span>
+                        <span> {{  item.itemid }}</span></td>
+                        <td colspan="2" style="text-align: end;font-size: 12px; opacity: 0.5;">reactions222
+                            <span><a href="">linktomsg</a></span>
+                            <span> {{  item.dtime }}</span>
+                        </td></tr>
+                </table>
+                <!-- <br/> -->
+            </span>
+            <!-- </li> -->
 
 
-
-    <!-- <table v-for="item in items"> -->
-    <!-- <li v-for="item in items"> -->
-    <!-- <span v-for="childItem in item.children"> -->
-        <!-- {{ item.message }} {{ childItem }} -->
-
-            <!-- <tr>
-                <td>{{item}} 111</td>
-                <td>{{item}} 222</td>
-                <td>{{item}} 333</td>
-                <td>{{item}} 444</td>
-                <td>{{item}} 555</td>
-                <td>{{item}} 666</td>
-            </tr> -->
-
-        
-        <!-- {{item}} -->
-    <!-- </span> -->
-    <!-- </li> -->
-    <!-- </table> -->
-    <!-- <span v-for="n in 300">{{ n }} body内容。。。yyy</span> -->
 </template>
 
 <style scoped>

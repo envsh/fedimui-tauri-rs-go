@@ -3,11 +3,16 @@ import { createApp } from "vue";
 
 import App from "./App.vue";
 
+
 import mylib from "./mylib";  // default section in mylib.ts
 import {mylib as mylibc} from "./mylib"; // class mylib section in mylib.ts
+import * as mylibg from "./mylib";
+import * as sssg from "./sharestatestore";
 
 console.log(mylib.dummy());
 console.log(mylibc.dummy());
+console.log(mylibg.dummy());
+console.log(sssg.dummy());
 
 // import { emit, listen } from "@tauri-apps/api/event";
 

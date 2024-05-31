@@ -16,15 +16,18 @@ import { ref } from "vue";
 // 也可以在.vue中直接引用 sss.items, 只是isRef()==false, 但是修改值还是有效的
 // let myvar = sss.items; 
 //
-export const ssscp = defineStore({
+export let ssscp = defineStore({
     id: "ssscp",
     state: () => ({
         useval: ref(1), // for dummy
         items: ref([]),
         items2: ref([]),
         items3: ref([]),
+        msglst: ref([]),
+        msgiptdata : ref(""),
 
-        tabpageons1: ref([false,false,true]), ///////////
+        tpcuridx1: ref(2),
+        tabpageons1: ref([false,false,true,false]), ///////////
         tabpageons2: ref([false,false,true]), ///////////
         tabpageons3: ref([false,false,true]), ///////////
         // tabwidget states
@@ -33,8 +36,9 @@ export const ssscp = defineStore({
         // tabpage2show: true,// as CreateMutable<boolean>,        
     }),
     
-
     actions: {
+
+
         f1() {
 
         },
@@ -52,3 +56,42 @@ export const ssscp = defineStore({
 
 // 无效
 // export let ssscp = storeToRefs(x());
+
+///////
+// "getActivePinia()" was called but there was no active Pinia
+// let sss = ssscp(); sss.useval++;
+
+// demo
+export 
+function dummy() {
+    return "dummy from sss global";
+}
+
+
+/////////
+
+export
+async function msglstScrollHeadTail(head : boolean){
+    console.log("chkelem ...", "msglstscrwin");
+    let e = document.getElementById('msglstscrwin');
+    if (e == null) {
+        console.log("elem null", "msglstscrwin");
+        return;
+    }
+    console.log(head, e.scrollTop, e.scrollHeight, e);
+    if (head ) {
+        e.scrollTop = 0;
+    }else {
+        e.scrollTop = e.scrollHeight;
+    }
+    // e.scrollTop = head ? 0 : e.scrollHeight;
+}
+
+export function docelembyid(id) { return document.getElementById(id); }
+export function docelembytag(id) { return document.getElementsByTagName(id); }
+
+export function wineventwatch(id) {
+    window.addEventListener(id, ()=>{
+    });
+}
+

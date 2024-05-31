@@ -6,9 +6,10 @@ import { toRef } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
+import * as ssg from "./sharestatestore";
 import {ssscp} from "./sharestatestore";
-const sss = ssscp();
-sss.useval = 1;
+const sss = ssscp(); sss.useval += 1;
+
 
 const greetMsg = ref("");
 const respmsg = ref("");
@@ -16,13 +17,13 @@ const name = ref("");
 const name2 = ref("");
 // const navidxval = ref(0);
 
-async function callfwdgo(cmd : string, args : [any]) {
-  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
-//   console.log(prm);
-  respmsg.value = await invoke("callfwdgo", prm);
-  return respmsg.value;
-}
+// async function callfwdgo(cmd : string, args : [any]) {
+//   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+//   let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
+// //   console.log(prm);
+//   respmsg.value = await invoke("callfwdgo", prm);
+//   return respmsg.value;
+// }
 
 async function setupeventlisten() {
     console.log("begin setup event listener");
@@ -34,22 +35,22 @@ async function setupeventlisten() {
     console.log("after setup event listener", unlisten);
 }
 
-async function cmd1(...args : any) {
-    let respval = await callfwdgo("cmd1", args);
-    let jso = JSON.parse(respval);
-    console.log(jso.retc, jso.retv);
+// async function cmd1(...args : any) {
+//     let respval = await callfwdgo("cmd1", args);
+//     let jso = JSON.parse(respval);
+//     console.log(jso.retc, jso.retv);
 
 
-}
-async function addnum(...args : any) {
-    args.push(name2.value);
-    let respval = await callfwdgo("addnum", args);
-    let jso = JSON.parse(respval);
-    console.log(jso.retc, jso.retv);
-    greetMsg.value = jso.retv[0];
+// }
+// async function addnum(...args : any) {
+//     args.push(name2.value);
+//     let respval = await callfwdgo("addnum", args);
+//     let jso = JSON.parse(respval);
+//     console.log(jso.retc, jso.retv);
+//     greetMsg.value = jso.retv[0];
 
-    // remlog("log111", "v222", 333);
-}
+//     // remlog("log111", "v222", 333);
+// }
 // async function remlog(...args : any) {
 //     args.push("fromts");
 //     let respval = await callfwdgo("remlog", args);
@@ -66,6 +67,8 @@ async function addnum(...args : any) {
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Greet from "./components/Greet.vue";
 import Msgview from "./components/Msgview.vue";
+import msginputsend from "./components/msginputsend.vue";
+
 // import Empty from "./components/Empty.vue";
 // import VueVirtualScroller from 'vue-virtual-scroller';
 // app.use(VueVirtualScroller);
@@ -119,13 +122,15 @@ for (let i = 0; i < 30; i++) {
     let item4 = {
         //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
         prependAvatar: "../images/favicon.png",
-          title: 'Recipe to try' + i,
+          title: i+ ' Recipe to try',
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           itemid: "mid"+i,
           dtime: "dtime000",
         };
     items2.push(item0);
     items2.push(item4);
+    (sss.msglst).push(item0);
+    (sss.msglst).push(item4);
 }
 console.warn("hhehheeddd", items.length);
 
@@ -139,54 +144,13 @@ window.addEventListener('load', (evt) => {
 //     return "https://randomuser.me/api/portraits/women/8.jpg";
 // }
 
-let msgiptdata = ref("");
+
 let items3 = ref(items2);
-async function sendmsg() {
-    // alert('aaa');
-    let words = "请使用中文回答以下问题, " + msgiptdata.value;
-    // let prms = callfwdgo("sendmsg", ["hello 世界!!!"]);
-    let prms = callfwdgo("sendmsg", [words]);
-    prms.then((restxt) => {
-        console.log(restxt);
-    let resobj = JSON.parse(restxt);
-    let retv0 = resobj.retv[0];
-    let ccobj = JSON.parse(retv0);
-    console.log(ccobj, ccobj.content, items2.length);
-    console.log(items3.value.length);
-    let msgobj = {
-        //   prependAvatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-        prependAvatar: "../images/favicon.png",
-          title: 'Recipe to try' + items3.value.length,
-          subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-          dtime: '',
-          itemid: '',
-        };
-    msgobj.title = resobj.argv[0];
-    msgobj.subtitle = ccobj.content;
-    msgobj.dtime = resobj.dtime;
-    items3.value.push(msgobj);
-
-    console.log(items3.value.length);
-    msglstScrollHeadTail(false);
-    })
-
-}
-
-function msglstScrollHeadTail(head : boolean){
-    let e = document.getElementById('msglstscrwin');
-    if (e == null) {return;}
-    if (head ) {
-        e.scrollTop = 0;
-    }else {
-        e.scrollTop = e.scrollHeight;
-    }
-}
-
-
 
 import Page1 from "./components/Page1.vue";
-import Page2 from "./components/Page2.vue";
-import Page3 from "./components/Page3.vue";
+// import Page2 from "./components/Page2.vue";
+// import Page3 from "./components/Page3.vue";
+import aboutui from "./components/about.vue";
 
 
 // import { storeToRefs } from 'pinia'
@@ -205,6 +169,7 @@ import Page3 from "./components/Page3.vue";
 // let tabpagerefs = ref([false,false,true]);
 // let tabpagerefs = sss.tabpageons1;
 
+// export 
 function switchtabpage(idx : number) :number {
     const ons = sss.tabpageons1;
     let oldidx = 0;
@@ -233,6 +198,33 @@ function switchtabpage(idx : number) :number {
 
     return oldidx;
 }
+
+// export 
+function nexttabpage(prev : boolean) {
+    let tpcuridx1 = () : number =>  {
+        for (let i = 0; i < sss.tabpageons1.length;i++) {
+            if (sss.tabpageons1[i] == true) {
+                return i;
+            }  
+        }
+        return -1;
+    };
+
+    let curidx = tpcuridx1();
+    let ons = sss.tabpageons1;
+    let nxtidx = curidx + (prev ? -1 : 1);
+    if (prev) {
+        if (nxtidx < 0) nxtidx = ons.length-1;
+    }else{
+        if (nxtidx >= ons.length) {
+            nxtidx = nxtidx % (ons.length);
+        }
+    }
+    console.log("tabidx", curidx, "=>", nxtidx);
+    sss.tpcuridx1 = nxtidx;
+    switchtabpage(nxtidx)
+}
+// export 
 function switchtabpagebyname(name : string) {
     let idx = -1;
     let m = new Map();
@@ -255,7 +247,7 @@ function upcnt() {
 <template>
     <div > {{ sss.useval }} 
         <span><button @click="upcnt()">upcnt</button></span></div>
-    <div>
+    <!-- <div>
         <div v-show="(sss.tabpageons1)[0]" id="tabpage1">
         <Page1/>
         </div>
@@ -265,7 +257,7 @@ function upcnt() {
         <div v-show="(sss.tabpageons1)[2]" id="tabpage3">
         <Page3/>
         </div>
-    </div>
+    </div> -->
 
     <div  style="width: auto; height: 450px; ">
         <div style="height:38px; width: 35%; ">
@@ -316,7 +308,11 @@ function upcnt() {
 
         <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
             <div style="background-color:#666;">
-                <span><button @click="switchtabpage(0)">btn1</button></span>
+                <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
+                    </span>
+                <span><select >
+                    <option v-for="val,idx in sss.tabpageons1" :selected="val"> {{ val }}.{{ idx }}</option>
+                    </select></span>
                 <span><button @click="switchtabpage(1)">btn2</button></span>
                 <span><select name="ffff">
                     <option>ffffff</option>
@@ -328,52 +324,33 @@ function upcnt() {
                 <span><button>btn3</button></span>
                 <span><button>btn4</button></span>
                 <span><button>btn5</button></span>
-                <span><img @click="msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
+                <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
-            <div id="msglstscrwin" style="height:79%; width: 100%; overflow-y: scroll;">
-            <!-- <li v-for="item in items"> -->
-            <!-- {{ item }} yyy -->
-            <span v-for="item in items3" style="width: 100%;" >
-                <table border="0" style=" width: 100%;">
-                    <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../images/border-diamonds.png" width="33px"/>
-                         </td>
-                        <td style="text-align:start; font-size: 12px; opacity: 0.5;"> feditype </td>
-                        <td> Sender name </td>
-                        <td> channnn {{ item.title }} </td>
-                        <td style="text-align: end; font-size: 12px; opacity: 0.5;"> tmmmmmm </td>
-                        <td rowspan="3" width="33px" style="vertical-align: top;"><img src="../images/border-diamonds.png" width="33px"/> </td>
-                    </tr>
-                    <tr><td colspan="4">
+            <div id="rightwin" style="height:89%; width: 100%;">
+                <div v-show="(sss.tabpageons1)[0]" id="tabpage0">
+                    <Page1/>
+                </div>
 
-                        <div v-html="item.subtitle"></div>
-                         <!-- dddd oiajefwef
-                        aoiwej faowei fjoiwajefewf
-                        aoiwejfaowei fjoiwajefewf
-                        ouewr
-                        oiweppdfg
-                         -->
-                    </td></tr>
-                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span>
-                        <span> {{  item.itemid }}</span></td>
-                        <td colspan="2" style="text-align: end;font-size: 12px; opacity: 0.5;">reactions222
-                            <span><a href="">linktomsg</a></span>
-                            <span> {{  item.dtime }}</span>
-                        </td></tr>
-                </table>
-                <!-- <br/> -->
-            </span>
-            <!-- </li> -->
+                <div v-show="(sss.tabpageons1)[1]" id="tabpage1" style="height: 100%;">
+                    <div id="msglstscrwin" style="height: 89%; width: 100%; overflow-y: scroll;">
+                        <Msgview/>
+                    </div>
+
+                    <div style="background-color: green; position: absolute; top: 400px; width: 100%;">
+                        <msginputsend/>
+                    </div>    
+                </div>
+
+                <div v-show="(sss.tabpageons1)[2]" id="tabpage2">
+                    <Greet/>
+                </div>
+                <div v-show="(sss.tabpageons1)[3]" id="tabpage3">
+                    <aboutui/>
+                </div>
+            
             </div>
 
-            <div style="background-color: green; position: absolute; top: 400px; width: 100%;">
-                <span><img src="../images/favicon.png" width="33px"/><button>btn1</button></span>
-                <span><textarea v-model="msgiptdata" rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
-                <!-- <span><input style="width: 198px;"></span> -->
-                <span><button v-on:click="sendmsg()">Send!</button></span>
-                <span><button>btn12</button></span>
-                <span><img @click="msglstScrollHeadTail(false)" width="20px" src="../images/favicon.png" title="SCB: scroll to bottom"/></span>
-            </div>
         </div>
         
     </div>
@@ -417,9 +394,9 @@ function upcnt() {
   <hr/>
 
 
-  <div class="container">
+  <!-- <div class="container">
     <Msgview />
-  </div>
+  </div> -->
 </template>
 
 <style >
