@@ -76,7 +76,7 @@ fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {
     }
     if false {
         unsafe {
-        info!("{} {}",123, rspp::globvars);
+        info!("{} {}",123, rspp::globvars.len());
         warn!("{}",123);
         error!("{} {}",123, 456);
         }
@@ -84,9 +84,12 @@ fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {
 }
 
 
-fn dummyfff(_v: &rspp::ffiparam) {}
+fn dummy_fnptrstub(v: &rspp::ffiparam) {
+    // let p = v as *const rspp::ffiparam;
+    debug!("dummy_fnptrstub 0x{} {}", rspp::ptrtostr2(v), v.len);
+}
 #[allow(non_upper_case_globals)]
-static mut ffifuncproxy_rs2go : fn(_v:&rspp::ffiparam) = dummyfff;
+static mut ffifuncproxy_rs2go : fn(_v:&rspp::ffiparam) = dummy_fnptrstub;
 
 // #[no_mangle]
 // pub extern "C"
@@ -96,6 +99,8 @@ static mut ffifuncproxy_rs2go : fn(_v:&rspp::ffiparam) = dummyfff;
 // }
 
 ////////////////
+
+// rarely: On macOS, `EventLoop` must be created on the main thread!
 
 #[allow(improper_ctypes_definitions)]
 #[no_mangle]
@@ -108,11 +113,21 @@ fn taurirs_ffi_runasc(fnptr : fn(v: &rspp::ffiparam)) {
     // println!("log level {}", log::Level);
 
     unsafe {
-    let oldfnptr = ffifuncproxy_rs2go;
-    ffifuncproxy_rs2go = fnptr;
-    println!("hehhe {} => {}", oldfnptr as *const libc::c_void as usize, fnptr as usize);
+        // let oldgvlen = rspp::globvarlen();        
+        let oldfnptr = ffifuncproxy_rs2go;
+        ffifuncproxy_rs2go = fnptr;
+        // rspp::globvarput2(&oldfnptr);
+        // rspp::globvarput2(&oldfnptr);
+        // println!("htcnt {} => {}", oldgvlen, rspp::globvarlen());
+        // oldfnptr as *const libc::c_void as usize
+        // 在 android 上有bug，unwrap() crash
+        // println!("ffifnptr {} => {}", rspp::ptrtostr(oldfnptr), fnptr as usize);
     }
 
-    run();
+    if std::env::consts::OS == "android" {
+        // android java call run, dont need go
+    }else{
+        run();
+    }
 }
 

@@ -67,3 +67,11 @@ NDK_HOME=/usr/local/share/android-ndk npm run tauri android dev
     INSTALL_PARSE_FAILED_NO_CERTIFICATES
 
 * npm run dev CPU 可能达到220% 。。。
+
+
+* jarsigner -verify ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+The operation couldn’t be completed. Unable to locate a Java Runtime
+    原来tauri的打包命令是可以给apk签名的，只是没有找到java...
+
+* 修改 ~/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wry-0.40.0/src/android/kotlin/WryActivity.kt  添加 loadLibrary("fedimuigo")
+    如果版本变了的话，可能要重新修改。

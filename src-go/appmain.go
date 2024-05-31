@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	mrand "math/rand"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -137,7 +138,7 @@ func cmdrun(cio *cmdinfo) {
 	cio.Dtime = time.Since(nowt).String()
 }
 
-func main() {
+func mainrelax() {
 	log.SetFlags(log.Flags() | log.Lshortfile ^ log.Ldate)
 	go func() {
 		for i := 0; ; i++ {
@@ -160,4 +161,21 @@ func main() {
 		}
 	}()
 	C.taurirs_ffi_runasc(unsafe.Pointer(C.taurirs_ffi_funcproxy_rsc2go))
+}
+
+func init() {
+	log.Println("go.main.init for tauri")
+	if runtime.GOOS == "android" {
+		go func() {
+			for {
+				gopp.SleepSec(3)
+				log.Println("whtttt running...")
+			}
+		}()
+		mainrelax()
+	}
+}
+
+func main() {
+	mainrelax()
 }
