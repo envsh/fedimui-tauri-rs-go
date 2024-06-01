@@ -1,7 +1,7 @@
 
 extern crate libc;
 // use libc::c_char;
-// use std::ffi::CStr;
+use std::ffi::CStr;
 extern crate log;
 extern crate env_logger;
 extern crate rspp;
@@ -35,16 +35,36 @@ pub fn run() {
 }
 
 ////////// extern
+fn remlogo(line : String) {
+    let mut line2 = line.replace("\"", "\\\"");
+    line2 = line2 + " fromrs";
+    let jstr = format!("{{\"cmd\":\"remlog\",\"argc\":1,\"argv\":[\"{}\"]}}", line2);
+    // callfwdgo(req);
+    {
+        log::debug!("reqdata={}", jstr);
+        let prm = &mut rspp::ffiparam::default();
+        prm.ptr = jstr.as_ptr() as usize;
+        prm.len = jstr.len();
+        unsafe { ffifuncproxy_rs2go(prm); }
+        let rspcc = rspp::cstrfrom_usizeptr(prm.resp, prm.len2);
+        debug!("go resp: {}", rspcc);
+        // format!("Hello, {}! You've been greeted from Rust!", "ooo");
+        rspp::cfree_usize(prm.resp);
+    }
+}
 
 #[tauri::command(async)]
 fn callfwdgo(jstr: String) -> String {
     log::debug!("reqdata={}", jstr);
+    remlogo(format!("reqdata={}", jstr));
     let prm = &mut rspp::ffiparam::default();
     prm.ptr = jstr.as_ptr() as usize;
     prm.len = jstr.len();
     unsafe { ffifuncproxy_rs2go(prm); }
-    let rspcc = rspp::cstrfrom_usizeptr(prm.resp, prm.len2);
-    debug!("go resp data: {}", rspcc);
+    remlogo(prm.tostr());
+    let rspcc = rspp::cstrfrom_usizeptr3(prm.resp, prm.len2);
+    debug!("go resp: {}", rspcc);
+    remlogo(format!("go resp: '{}' len1 {} len2 {}", rspcc, rspcc.len(), prm.len2));
     // format!("Hello, {}! You've been greeted from Rust!", "ooo");
     rspp::cfree_usize(prm.resp);
     return rspcc;
@@ -122,6 +142,7 @@ fn taurirs_ffi_runasc(fnptr : fn(v: &rspp::ffiparam)) {
         // oldfnptr as *const libc::c_void as usize
         // 在 android 上有bug，unwrap() crash
         // println!("ffifnptr {} => {}", rspp::ptrtostr(oldfnptr), fnptr as usize);
+        println!("ffifnptr {} => {}", oldfnptr as *const libc::c_void as usize, fnptr as usize);
     }
 
     if std::env::consts::OS == "android" {

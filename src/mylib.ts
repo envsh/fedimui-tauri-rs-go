@@ -38,6 +38,7 @@ async function callfwdgo(cmd : string, args : [any]) : Promise<string> {
   //   console.log(prm);
     addmylog2(prm.jstr);
     let retval = await invoke<string>("callfwdgo", prm);
+    addmylog2(retval, "of", prm.jstr);
     return retval;
 }
 

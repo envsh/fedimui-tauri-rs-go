@@ -39,5 +39,8 @@ golib:
 #	cd src-go && GOOS=android  GOARCH=arm64  CGO_CFLAGS="-arch arm64" CGO_LDFLAGS="-arch arm64" CGO_ENABLED=1 go build -buildmode=c-shared -o ../fedimuigo.so
 # cd src-go && go build - android -arch aarch64 -o libuigo.so
 
+alogc:
+	/opt/android-sdk/adbtools/adb logcat | grep -i golog
+
 rsdoc:
 	cd src-tauri && cargo doc --open -p log -p env_logger -p tauri

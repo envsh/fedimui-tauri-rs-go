@@ -7,6 +7,7 @@ import (
 	"log"
 	mrand "math/rand"
 	"runtime"
+	"strings"
 	"time"
 	"unsafe"
 
@@ -28,7 +29,7 @@ import "C"
 
 //go:generate goppgen main cgo
 
-type ffireqresp struct {
+type ffiparam struct {
 	// ptr: *const u8,
 	// ptr usize
 	ptr *C.char
@@ -53,12 +54,20 @@ type cmdinfo struct {
 	Dtime string `json:"dtime"`
 }
 
+func nowtimerfc3389() string {
+	return gopp.TimeRfc3389ms(time.Now())
+}
+
 //export taurirs_ffi_funcproxy_rsc2go
 func taurirs_ffi_funcproxy_rsc2go(vx unsafe.Pointer) {
-	v := (*ffireqresp)(vx)
-	log.Println("hehehhee", v, time.Now())
+	v := (*ffiparam)(vx)
+	log.Println("ffiparam raw", v, nowtimerfc3389())
 	reqdata := C.GoStringN(v.ptr, C.int(v.len))
-	log.Println("hehehhee", v, reqdata, time.Now())
+	if strings.Contains(reqdata, `"cmd":"remlog"`) {
+		log.Println("remlog ", reqdata, v, nowtimerfc3389())
+		return
+	}
+	log.Println("ffiparam txt", reqdata, v, nowtimerfc3389())
 
 	cio, err := cmdparse(v)
 	gopp.ErrPrint(err)
@@ -67,9 +76,11 @@ func taurirs_ffi_funcproxy_rsc2go(vx unsafe.Pointer) {
 	cio.Retc = len(cio.Retv)
 	resp, err := json.Marshal(cio)
 	gopp.ErrPrint(err)
-	log.Println(string(resp))
+	log.Println("resp ready", len(resp), string(resp))
 	v.resp = C.CString(string(resp))
 	v.len2 = usize(len(resp))
+
+	log.Println("respobj", v)
 
 	// v.resp =
 	// respdata := fmt.Sprintf("hello from go, u say '%s'", reqdata)
@@ -78,13 +89,14 @@ func taurirs_ffi_funcproxy_rsc2go(vx unsafe.Pointer) {
 	// log.Println("hehehhee", v, reqdata, time.Now())
 }
 
-func cmdparse(prm *ffireqresp) (*cmdinfo, error) {
-	jso, err := spjson.NewJson([]byte(C.GoStringN(prm.ptr, C.int(prm.len))))
+func cmdparse(prm *ffiparam) (*cmdinfo, error) {
+	data := C.GoStringN(prm.ptr, C.int(prm.len))
+	jso, err := spjson.NewJson([]byte(data))
 	gopp.ErrPrint(err)
 	// log.Println(jso.Get("cmd"), jso.Get("argc"), jso.Get("argv"))
 	log.Println(jso)
 	cio := &cmdinfo{}
-	err = json.Unmarshal([]byte(C.GoStringN(prm.ptr, C.int(prm.len))), cio)
+	err = json.Unmarshal([]byte(data), cio)
 	gopp.ErrPrint(err)
 	log.Println(cio)
 	return cio, err
@@ -93,7 +105,7 @@ func cmdrun(cio *cmdinfo) {
 	var nowt = time.Now()
 	switch cio.Cmd {
 	case "cmd1":
-		retval := fmt.Sprintf("cmd %s res %v", cio.Cmd, time.Now())
+		retval := fmt.Sprintf("cmd %s res %v", cio.Cmd, gopp.TimeRfc3389ms(nowt))
 		cio.Retv = append(cio.Retv, retval)
 	case "addnum":
 		retval := 0
@@ -105,6 +117,8 @@ func cmdrun(cio *cmdinfo) {
 		cio.Retv = append(cio.Retv, retval)
 	case "remlog":
 		log.Println(cio.Argv...)
+		cio.Retv = append(cio.Retv, "OK")
+
 	case "sendmsg":
 
 		msg := cio.Argv[0].(string)
@@ -127,15 +141,16 @@ func cmdrun(cio *cmdinfo) {
 			gopp.ErrPrint(err)
 		}
 		// todo add feditype=gptcf
-		log.Println(string(bcc))
 
 		cio.Retv = append(cio.Retv, string(bcc))
 
 	default:
-		retval := fmt.Sprintf("cmd %s unsupport, %v", cio.Cmd, time.Now())
+		retval := fmt.Sprintf("cmd %s unsupport, %v", cio.Cmd, gopp.TimeRfc3389ms(nowt))
 		cio.Retv = append(cio.Retv, retval)
 	}
 	cio.Dtime = time.Since(nowt).String()
+
+	log.Println(cio.Retv, cio.Cmd)
 }
 
 func mainrelax() {
@@ -143,7 +158,7 @@ func mainrelax() {
 	go func() {
 		for i := 0; ; i++ {
 			gopp.SleepSec(2)
-			prm := &ffireqresp{}
+			prm := &ffiparam{}
 			cio := &cmdinfo{}
 			cio.Cmd = gopp.RandomStringPrintable(6)
 			cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
@@ -167,9 +182,9 @@ func init() {
 	log.Println("go.main.init for tauri")
 	if runtime.GOOS == "android" {
 		go func() {
-			for {
+			for i := 0; ; i++ {
 				gopp.SleepSec(3)
-				log.Println("whtttt running...")
+				log.Println("whtttt running...", i)
 			}
 		}()
 		mainrelax()
