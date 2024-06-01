@@ -64,7 +64,7 @@ func taurirs_ffi_funcproxy_rsc2go(vx unsafe.Pointer) {
 	log.Println("ffiparam raw", v, nowtimerfc3389())
 	reqdata := C.GoStringN(v.ptr, C.int(v.len))
 	if strings.Contains(reqdata, `"cmd":"remlog"`) {
-		log.Println("remlog ", reqdata, v, nowtimerfc3389())
+		log.Println(reqdata, v, nowtimerfc3389())
 		return
 	}
 	log.Println("ffiparam txt", reqdata, v, nowtimerfc3389())
@@ -153,26 +153,32 @@ func cmdrun(cio *cmdinfo) {
 	log.Println(cio.Retv, cio.Cmd)
 }
 
+func emitmsgts() {
+	prm := &ffiparam{}
+	cio := &cmdinfo{}
+	cio.Cmd = gopp.RandomStringPrintable(6)
+	cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
+	cio.Argc = len(cio.Argv)
+	scc := gopp.JsonMarshalMust(cio)
+	prm.len = usize(len(scc))
+	prm.ptr = C.CString(scc)
+	prmx := (uintptr)(unsafe.Pointer(prm))
+	C.taurirs_ffi_emitfwdts(C.uintptr_t(prmx))
+	// cgopp.Cfree3()
+	// C.free(unsafe.Pointer(prm.ptr))
+	cgopp.Cfree(unsafe.Pointer(prm.ptr))
+}
+
 func mainrelax() {
 	log.SetFlags(log.Flags() | log.Lshortfile ^ log.Ldate)
+	log.SetPrefix("[taurigo] ")
 	go func() {
 		for i := 0; ; i++ {
 			gopp.SleepSec(2)
-			prm := &ffiparam{}
-			cio := &cmdinfo{}
-			cio.Cmd = gopp.RandomStringPrintable(6)
-			cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
-			cio.Argc = len(cio.Argv)
-			scc := gopp.JsonMarshalMust(cio)
-			prm.len = usize(len(scc))
-			prm.ptr = C.CString(scc)
-			prmx := (uintptr)(unsafe.Pointer(prm))
-			C.taurirs_ffi_emitfwdts(C.uintptr_t(prmx))
-			// cgopp.Cfree3()
-			// C.free(unsafe.Pointer(prm.ptr))
-			cgopp.Cfree(unsafe.Pointer(prm.ptr))
-
-			break
+			emitmsgts()
+			if i > 5 {
+				break
+			}
 		}
 	}()
 	C.taurirs_ffi_runasc(unsafe.Pointer(C.taurirs_ffi_funcproxy_rsc2go))
@@ -185,6 +191,7 @@ func init() {
 			for i := 0; ; i++ {
 				gopp.SleepSec(3)
 				log.Println("whtttt running...", i)
+				emitmsgts()
 			}
 		}()
 		mainrelax()

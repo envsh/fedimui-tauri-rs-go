@@ -46,7 +46,7 @@ fn remlogo(line : String) {
         prm.ptr = jstr.as_ptr() as usize;
         prm.len = jstr.len();
         unsafe { ffifuncproxy_rs2go(prm); }
-        let rspcc = rspp::cstrfrom_usizeptr(prm.resp, prm.len2);
+        let rspcc = rspp::cstrfrom_usizeptr3(prm.resp, prm.len2);
         debug!("go resp: {}", rspcc);
         // format!("Hello, {}! You've been greeted from Rust!", "ooo");
         rspp::cfree_usize(prm.resp);
@@ -76,22 +76,62 @@ static mut trapp : usize = 0;
 #[no_mangle]
 pub extern "C"
 fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {
-    debug!("emitfwdts ptr{} len{}", v as *const rspp::ffiparam as usize, v.len);
+    // v as *const rspp::ffiparam as usize
+    debug!("emitfwdts ptr{} len{}", rspp::ptrtostr2(v), v.len);
     // debug!("emitfwdts {}", rspp::ptrtostr(v)); // why not work
-    let data = rspp::cstrfrom_usizeptr(v.ptr, v.len);
+    remlogo(format!("emitfwdts ptr{} len{}", rspp::ptrtostr2(v), v.len));
+    // let data = rspp::cstrfrom_usizeptr3(v.ptr, v.len);
+    let data2 = rspp::cstrfrom_usizeptr3(v.ptr, v.len);
+    let mut emitres : String = "emitres".into();
     unsafe {
     let app : &mut tauri::App = rspp::globvarget(trapp);
-    let res = app.emit("evtchan", data);
-    match res {
-        Err(e) => {
-            debug!("emitres res {}", e);
-            v.code = 500;
+    let ah = app.handle();
+    let runmtres = ah.run_on_main_thread( ||  {
+        // let t = "{\"message\": \"hello world呵呵呵\"}";
+        let mut emitres : String = "emitres".into();
+        let dlen = data2.len();
+        let res = ah.emit("evtchan", data2);
+        match res {
+            Err(e) => {
+                emitres = format!("{} {}", emitres, e);
+                // debug!("emitres res {}", e);
+                // v.code = 500;
+            }
+            Ok(()) => {
+                // emitres += "ok";
+                // debug!("emitres {}", "ok");
+                // v.code = 200
+            }
         }
+        info!("emit len {}, {}", dlen, emitres);
+    });
+    match runmtres {
         Ok(()) => {
-            debug!("emitres {}", "ok");
+            emitres += "ok";
+            // debug!("emitres {}", "ok");
             v.code = 200
         }
+        Err(e) => {
+            emitres = format!("{} {}", emitres, e);
+            // debug!("emitres res {}", e);
+            v.code = 500;
+        }
     }
+
+    // let res = app.emit("evtchan", data); // Result<()>
+    // match res {
+    //     Ok(()) => {
+    //         emitres += "ok";
+    //         // debug!("emitres {}", "ok");
+    //         v.code = 200
+    //     }
+    //     Err(e) => {
+    //         emitres = format!("{} {}", emitres, e);
+    //         // debug!("emitres res {}", e);
+    //         v.code = 500;
+    //     }
+    // }
+    remlogo(format!("emitfwdts ptr {} len {} res {}", rspp::ptrtostr2(v), v.len, emitres));
 
     }
     if false {

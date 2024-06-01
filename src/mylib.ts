@@ -65,6 +65,19 @@ async function addnum(val: number | string, ...args : any) : Promise<string> {
     return retval;
 }
 
+export
+async function remlogo(...args : any) /*: Promise<string>*/ {
+    let respval = await callfwdgo("remlog", args);    
+    // let jso = JSON.parse(respval);
+    // console.log(jso.retc, jso.retv);
+    // addmylog2(jso.retc,  jso.retv);
+    // let retval = jso.retv[0];
+    // greetMsg.value = jso.retv[0];
+
+    // remlog("log111", "v222", 333);
+    // return retval;
+}
+
 /////// sss
 var sss = null; //
 export 

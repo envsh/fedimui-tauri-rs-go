@@ -2,29 +2,67 @@
 
 import { useLogger } from "vue-logger-plugin";
 const log = useLogger();
-// import { ref } from "vue";
+import { ref } from "vue";
 // import { isRef } from "vue";
 // import { toRef } from "vue";
 // import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
-    import * as ssg from "./sharestatestore";
-    import {ssscp} from "./sharestatestore";
-    const sss = ssscp(); sss.useval += 1;
-    import * as mylibg from "./mylib";
+import * as ssg from "./sharestatestore";
+import {ssscp} from "./sharestatestore";
+const sss = ssscp(); sss.useval += 1;
+import * as mylibg from "./mylib";
 
+import { getTauriVersion } from '@tauri-apps/api/app';
+import { getCurrent } from '@tauri-apps/api/webview';
+// const appVersion = await getVersion();
 
+let tauri_setup_event_listener_timer = null;
+let tauri_setup_event_listener_cnter = 0;
 async function setuptaurieventlisten() {
+    sss.intowinload = true;
     console.log("begin setup tauri event listener");
-    const unlisten = await listen<string>('evtchan', (evt) => {
-    //console.log(evt.event, evt.payload.length, evt.payload);
+    
+    // android: cachted Command plugin: event|listen not allowed by ACL
+    // https://github.com/tauri-apps/tauri/issues/9502#issuecomment-2081478814
+    // reload page works
+    listen<string>('evtchan', (evt) => {
+        //console.log(evt.event, evt.payload.length, evt.payload);
+        sss.rcvevtcnt += 1;
+        sss.evtlsned = true;
         let jso = JSON.parse(evt.payload);
         console.log(evt.event, evt.payload.length, jso , "//");
-    })
-    console.log("after setup tauri event listener", unlisten);
+    }).then((unlsnfn)=> {
+        sss.tauriunlsnfn = 'thened ' + unlsnfn;
+        if (tauri_setup_event_listener_timer != null) {
+            clearTimeout(tauri_setup_event_listener_timer);
+            tauri_setup_event_listener_timer = null;
+        }
+    }).catch((err)=> {
+        sss.tauriunlsnfn = 'catched ' + err;
+        if (tauri_setup_event_listener_timer == null) {
+            tauri_setup_event_listener_timer = window.setTimeout(setuptaurieventlisten, 1234);
+        }
+    });
+    console.log("after setup tauri event listener", sss.tauriunlsnfn);
     log.warn("hehhehhe",123);
+    mylibg.remlogo("tauri setup global event listener @evtchan.", sss.tauriunlsnfn);
 }
-
+window.addEventListener('load', (evt) => {
+    console.log("window load", evt);
+    console.log(location.href, navigator.userAgent);
+    sss.weburl = location.href;
+    sss.userAgent = navigator.userAgent;
+    if (navigator.userAgent.indexOf('ndroid') != -1) {
+        sss.isandroid = true;
+    }
+    sss.isandroid = true;
+    mylibg.setsss(sss);
+    setuptaurieventlisten();
+    getTauriVersion().then((ver)=>{ sss.trappver = ''+ver });
+    // permission not allow...
+    // getCurrent().size().then((szo)=>{ sss.webviewsize = ''+szo});
+})
 
 // console.log("start");
 // const unlisten = await listen<string>('evtchan', (evt) => {
@@ -73,16 +111,8 @@ for (let i = 0; i < 30; i++) {
 }
 console.warn("hhehheeddd", items.length);
 
-window.addEventListener('load', (evt) => {
-    console.log("window load", evt);
-    console.log(location.href, navigator.userAgent);
-    if (navigator.userAgent.indexOf('ndroid') != -1) {
-        sss.isandroid = true;
-    }
-    sss.isandroid = true;
-    mylibg.setsss(sss);
-    setuptaurieventlisten();
-})
+
+
 ///
 
 import Page1 from "./components/Page1.vue";
@@ -167,6 +197,7 @@ function switchtabpagebyname(name : string) {
 function upcnt() { sss.useval++; }
 function reloadui() { location.reload(); }
 
+
 </script>
 
 <template>
@@ -174,6 +205,7 @@ function reloadui() { location.reload(); }
         <span><button @click="upcnt()">upcnt</button>
             <button @click="reloadui()">reload</button></span>
             <span>isand {{ sss.isandroid }}</span>
+            &nbsp; <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }}</span>
         </div>
 
     <div  style="width: auto; height: 650px; ">
@@ -201,7 +233,7 @@ function reloadui() { location.reload(); }
                 <span><button @click="switchtabpage(3)" >btn3</button></span>
                 <span><button @click="switchtabpage(4)" >btn4</button></span>
                 <span><button @click="switchtabpage(5)" >btn5</button></span>
-                <span><button @click="switchtabpage(6)" title="mylogui">logui</button></span>
+                <span><button @click="switchtabpage(6)" :title="sss.lastlog" >logui</button></span>
                 <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 

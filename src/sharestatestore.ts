@@ -43,7 +43,18 @@ export let ssscp = defineStore({
         // tabwidget states
         // tabpage0show: false,// as CreateMutable<boolean>,
         // tabpage1show: false,// as CreateMutable<boolean>,
-        // tabpage2show: true,// as CreateMutable<boolean>,        
+        // tabpage2show: true,// as CreateMutable<boolean>,      
+        
+        // stats
+        evtlsned : ref(false),
+        intowinload: ref(false),
+        userAgent: ref(""),
+        weburl : ref(""),
+        tauriunlsnfn: ref(""),
+        trappver: ref(""),
+        webviewsize: ref(""),
+        rcvevtcnt: ref(0),
+        lastlog: ref(""),
     }),
     
     actions: {
