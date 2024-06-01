@@ -12,21 +12,21 @@ const sss = ssscp(); sss.useval += 1;
 //     },
 // }
 
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+// import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 // import {RecycleScroller} from 'vue-virtual-scroller';
 // App.components('RecycleScroller');
 
 // const greetMsg = ref("");
 // const name = ref("");
 
-let items  = ["iii", "jjjjj"];
-// let itemsref = ref(items);
-for (let i = 0; i < 100; i++) {
-    // console.log(i+3);
-    items.push("field字段"+i);
-}
-console.log(items.length);
-console.warn("hhehheeddd");
+// let items  = ["iii", "jjjjj"];
+// // let itemsref = ref(items);
+// for (let i = 0; i < 100; i++) {
+//     // console.log(i+3);
+//     items.push("field字段"+i);
+// }
+// console.log(items.length);
+console.warn("hhehheeddd", sss.useval);
 
 </script>
 

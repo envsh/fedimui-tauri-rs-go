@@ -8,10 +8,10 @@ const log = useLogger();
 // import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 // import { emit, listen } from "@tauri-apps/api/event";
-import * as ssg from "./sharestatestore";
-import {ssscp} from "./sharestatestore";
-const sss = ssscp(); sss.useval += 1;
-// import * as mylibg from "./mylib";
+    import * as ssg from "./sharestatestore";
+    import {ssscp} from "./sharestatestore";
+    const sss = ssscp(); sss.useval += 1;
+    import * as mylibg from "./mylib";
 
 
 async function setuptaurieventlisten() {
@@ -37,6 +37,7 @@ async function setuptaurieventlisten() {
 import Greet from "./components/Greet.vue";
 import Msgview from "./components/Msgview.vue";
 import msginputsend from "./components/msginputsend.vue";
+import groupview from "./components/groupview.vue";
 
 // import Empty from "./components/Empty.vue";
 // import VueVirtualScroller from 'vue-virtual-scroller';
@@ -74,6 +75,12 @@ console.warn("hhehheeddd", items.length);
 
 window.addEventListener('load', (evt) => {
     console.log("window load", evt);
+    console.log(location.href, navigator.userAgent);
+    if (navigator.userAgent.indexOf('ndroid') != -1) {
+        sss.isandroid = true;
+    }
+    sss.isandroid = true;
+    mylibg.setsss(sss);
     setuptaurieventlisten();
 })
 ///
@@ -83,6 +90,8 @@ import Page1 from "./components/Page1.vue";
 // import Page3 from "./components/Page3.vue";
 import aboutui from "./components/about.vue";
 import testui from "./components/testui.vue";
+import mylogui from "./components/mylogui.vue";
+
 
 // export 
 function switchtabpage(idx : number) :number {
@@ -107,8 +116,10 @@ function switchtabpage(idx : number) :number {
     }
     ons[idx] = true;
     console.log("curidx " + oldidx + " => " + idx);
+    mylibg.addmylog(sss.loglst, "curidx " + oldidx + " => " + idx);
     }catch(e) {
         console.log(e);
+        mylibg.addmylog(sss.loglst, e);
     }
 
     return oldidx;
@@ -161,71 +172,36 @@ function reloadui() { location.reload(); }
 <template>
     <div > {{ sss.useval }} 
         <span><button @click="upcnt()">upcnt</button>
-            <button @click="reloadui()">reload</button></span></div>
-
-    <div  style="width: auto; height: 450px; ">
-        <div style="height:48px; width: 35%; background: cadetblue;">
-            <table border="0" width="100%"><tr><td>
-                <img src="../images/favicon.png" width="23px"/></td>
-                <td align="center" title="descccccc"> Nickname <br/>&nbsp;
-                    <span style="font-size: 12px;">sfffd{{ sss.useval }}</span> </td>
-                <td align="right">
-                    x<input style="width: 50%;" placeholder="keywords..."/>
-                    <button type="submit">SCH</button>
-                </td>
-            </tr></table>
+            <button @click="reloadui()">reload</button></span>
+            <span>isand {{ sss.isandroid }}</span>
         </div>
 
-        <!-- chatroom list -->
-        <div style="height: 79%; width: 35%; overflow-y: scroll;  background: #2a2a2a;">
-            <!-- <li v-for="item in items">
-                {{ item }} yyy
-            </li> -->
-
-            <v-list :items="sss.romlst" lines="one" item-props>
-                <template v-slot:subtitle="{ subtitle }">
-                    <div v-html="subtitle"></div>
-                </template>
-            </v-list>
-
-        </div>
-        <div style="vertical-align: bottom; width: 35%; background: #666; position: absolute; top: 400px">
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-            <span><select name="ffff">
-                    <option>ffffff</option>
-                    <option>bbb</option>
-                    <option selected>tttooooooo</option>
-                    <option>eee</option>
-                    <option>www</option>
-            </select></span>
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-            <span><button>btn1</button></span>
-
-        </div>
-
-        <div style="height:inherit; width: 64%;position: absolute; left: 36%; top: 0%; ">
+    <div  style="width: auto; height: 650px; ">
+        
+        <!-- <groupview/> -->
+        <!-- left: 36% -> 0, width: 64% -> 0  -->
+        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 4%; ">
             <div style="background-color:#666;">
                 <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
                     </span>
                 <span title="tabpage list"><select >
                     <option v-for="val,idx in sss.tabpageons1" :selected="val"> {{ val }}.{{ idx }}</option>
                     </select></span>
-                <span><button @click="switchtabpage(1)">btn2</button></span>
-                <span><select name="ffff">
+
+                <!-- <span><select name="ffff">
                     <option>ffffff</option>
                     <option>bbb</option>
-                    <option selected>tttooooooo</option>
+                    <option selected>tttooo</option>
                     <option>eee</option>
                     <option>www</option>
-                </select></span>
-                <span><button>btn3</button></span>
-                <span><button>btn4</button></span>
-                <span><button>btn5</button></span>
+                </select></span> -->
+                <span><button @click="switchtabpage(0)" >btn0</button></span>
+                <span><button @click="switchtabpage(1)" >btn1</button></span>
+                <span><button @click="switchtabpage(2)" >btn2</button></span>
+                <span><button @click="switchtabpage(3)" >btn3</button></span>
+                <span><button @click="switchtabpage(4)" >btn4</button></span>
+                <span><button @click="switchtabpage(5)" >btn5</button></span>
+                <span><button @click="switchtabpage(6)" title="mylogui">logui</button></span>
                 <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
@@ -239,20 +215,28 @@ function reloadui() { location.reload(); }
                         <Msgview/>
                     </div>
 
-                    <div style="background-color:darkslategray; position: absolute; top: 400px; width: 100%;">
+                    <div style="background-color:darkslategray; position: absolute; top: 550px; width: 100%;">
                         <msginputsend/>
                     </div>    
                 </div>
 
-                <div v-show="(sss.tabpageons1)[2]" id="tabpage.greetui">
+                <div v-show="(sss.tabpageons1)[2]" id="tabpage.groupview"  style="height: 100%; width: 100%;">
+                    <groupview/>
+                </div>
+
+                <div v-show="(sss.tabpageons1)[3]" id="tabpage.greetui">
                     <Greet/>
                 </div>
-                <div v-show="(sss.tabpageons1)[3]" id="tabpage.aboutui">
+                <div v-show="(sss.tabpageons1)[4]" id="tabpage.aboutui">
                     <aboutui/>
                 </div>
             
-                <div v-show="(sss.tabpageons1)[4]" id="tabpage.testui">
+                <div v-show="(sss.tabpageons1)[5]" id="tabpage.testui">
                     <testui/>
+                </div>
+
+                <div v-show="(sss.tabpageons1)[6]" id="tabpage.mylogui">
+                    <mylogui/>
                 </div>
 
             </div>
