@@ -48,6 +48,23 @@ async function setuptaurieventlisten() {
     log.warn("hehhehhe",123);
     mylibg.remlogo("tauri setup global event listener @evtchan.", sss.tauriunlsnfn);
 }
+let webviewgetsize_timer = null;
+function webviewgetsize() {
+    getCurrent().size()
+        .then((szo)=>{
+            sss.webviewsize = ''+ JSON.stringify(szo);
+            if (webviewgetsize_timer != null) {
+                window.clearTimeout(webviewgetsize_timer);
+                webviewgetsize_timer = null;
+            }
+        })
+        .catch((err)=> {
+            log.warn("faild", err);
+            if (webviewgetsize_timer == null) {
+                webviewgetsize_timer = window.setTimeout(webviewgetsize, 2345);
+            }
+        });
+}
 window.addEventListener('load', (evt) => {
     console.log("window load", evt);
     console.log(location.href, navigator.userAgent);
@@ -62,6 +79,7 @@ window.addEventListener('load', (evt) => {
     getTauriVersion().then((ver)=>{ sss.trappver = ''+ver });
     // permission not allow...
     // getCurrent().size().then((szo)=>{ sss.webviewsize = ''+szo});
+    webviewgetsize();
 })
 
 // console.log("start");

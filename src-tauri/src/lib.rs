@@ -85,12 +85,13 @@ fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {
     let mut emitres : String = "emitres".into();
     unsafe {
     let app : &mut tauri::App = rspp::globvarget(trapp);
-    let ah = app.handle();
-    let runmtres = ah.run_on_main_thread( ||  {
+    
+    let runmtres = app.run_on_main_thread(  ||  {
+        let app : &mut tauri::App = rspp::globvarget(trapp);
         // let t = "{\"message\": \"hello world呵呵呵\"}";
         let mut emitres : String = "emitres".into();
         let dlen = data2.len();
-        let res = ah.emit("evtchan", data2);
+        let res = app.emit("evtchan", data2); // evtch.glob,
         match res {
             Err(e) => {
                 emitres = format!("{} {}", emitres, e);
