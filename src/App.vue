@@ -415,7 +415,7 @@ function sidebar_menu_folder(fold) {
     mylibg.uiinfo(fold);
 
 }
-let sidebarshow = ref(true);
+let sidebarshow = ref(false);
 
 function onSwipeLeftItem(x,y) {
     mylibg.uiinfo(x,y);
@@ -428,8 +428,42 @@ function onSwipeLeftItem(x,y) {
         if (sidebarshow.value != false) {
             sidebarshow.value = false;
         }
+    } if (x == "bottom") {
+        reloadui();
     }
 }
+
+
+import ContextMenu from '@imengyu/vue3-context-menu'
+
+function btntapshowctxmenu(x,y) {
+    mylibg.uiinfo(x,y);
+    console.log(x);
+    // vuefloatmenumoveto(x.clientY,x.clientX);
+    ContextMenu.showContextMenu({
+    x: x.clientX,
+    y: x.clientY,
+    items: [
+      { 
+        label: "A menu item", 
+        onClick: () => {
+          alert("You click a menu item");
+        }
+      },
+      { 
+        label: "A submenu", 
+        children: [
+          { label: "Item1" },
+          { label: "Item2" },
+          { label: "Item3" },
+        ]
+      },
+    ]
+  }); 
+}
+
+import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
+
 </script>
 
 <template>
@@ -443,14 +477,14 @@ function onSwipeLeftItem(x,y) {
   </sidebar-menu>
     </div>
 
-            <!-- like toolbar -->
+        <!-- like toolbar -->
     <div style="position: absolute;top:35px;" > {{ sss.useval }} 
         <span><button @click="upcnt()">upcnt</button>
             <button @click="reloadui()">reload</button></span>
             <span>isand {{ sss.isandroid }}</span>
             &nbsp;
             <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }} </span>
-            <button class="btn" v-touch:swipe.left="onSwipeLeftItem">Swipe left</button>
+            <button class="btn" v-touch:tap="btntapshowctxmenu">Swipe left</button>
         </div>
 
     <div  style="width: auto; height: 650px;" v-touch:swipe="onSwipeLeftItem">
@@ -478,7 +512,7 @@ function onSwipeLeftItem(x,y) {
                 <span><button @click="switchtabpage(3)" >btn3</button></span>
                 <span><button @click="switchtabpage(4)" >btn4</button></span>
                 <span><button @click="switchtabpage(5)" >btn5</button></span>
-                <span><button @click="switchtabpage(6)" :title="sss.lastlog" >logui</button></span>
+                <span><button @click="switchtabpage(6)" v-tooltip="sss.lastlog" >logui</button></span>
                 <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 

@@ -71,8 +71,8 @@ const router = createRouter({
     history: createMemoryHistory(),
 });
 
-// \see https://github.com/robinrodricks/vue3-touch-events?tab=readme-ov-file#events
-import Vue3TouchEvents from "vue3-touch-events";
+
+
 
 // createApp(App).mount("#app");
 const vapp = createApp(App);
@@ -80,7 +80,18 @@ const vapp = createApp(App);
 // cpx.config.compilerOptions.isCustomElement = ()=>{return true};
 vapp.use(logger).use(piniafy).use(vuetify);
 vapp.use(router);
+
+// \see https://github.com/robinrodricks/vue3-touch-events?tab=readme-ov-file#events
+import Vue3TouchEvents from "vue3-touch-events";
 vapp.use(Vue3TouchEvents);
+
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
+import ContextMenu from '@imengyu/vue3-context-menu'
+vapp.use(ContextMenu);
+
+import 'floating-vue/dist/style.css'
+import FloatingVue from 'floating-vue'
+vapp.use(FloatingVue)
   
 // https://pinia.vuejs.org/core-concepts/outside-component-usage.html
 // after installing the pinia plugin with app.use(pinia) will work:
