@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import * as vue from 'vue';
 import * as ssg from "../sharestatestore";
 import {ssscp} from "../sharestatestore";
 const sss = ssscp(); sss.useval += 1;
-import * as mylibg from "../mylib";
+import * as mylig from "../mylib";
+
+vue.onMounted(()=>{mylig.uidebug('mounted')});
+vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
+
 
 </script>
 

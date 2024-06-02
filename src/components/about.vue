@@ -26,6 +26,7 @@ const sss = ssscp(); sss.useval += 1;
     <p>rcvevtcnt: {{ sss.rcvevtcnt }}</p>
     <p>webviewsize: {{ sss.webviewsize }}</p>
     <p>vuejsver: {{ sss.vuejsver }}</p>
+    <p>callorder: {{ sss.loadmnt }}</p>
     <p>window: {{ sss.wndwdt }}x{{ sss.wndhgt }}</p>
     <p>screen: {{ sss.scnwdt }}x{{ sss.scnhgt }}</p>
   <!-- <form class="row" @submit.prevent="greet">

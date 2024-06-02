@@ -67,7 +67,8 @@ const sss = ssscp(); sss.useval += 1;
 sss.vapp = vapp;
 vapp.mount("#app");
 
-console.log("will run here???");
+sss.vuejsver = vapp.version;
+console.log("will run here???", vapp.version);
 logger.warn("fff");
 
 // const unlisten = await listen<string>('evtchan', (evt) => {

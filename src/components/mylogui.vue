@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import * as vue from 'vue';
 // for android
 import {ssscp} from "../sharestatestore";
 const sss = ssscp(); sss.useval += 1;
+import * as mylig from '../mylib';
 
-
+vue.onMounted(()=>{mylig.uidebug('mounted')});
+vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
 </script>
 
 

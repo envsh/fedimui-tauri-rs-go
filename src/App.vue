@@ -3,7 +3,7 @@
 import { useLogger } from "vue-logger-plugin";
 const log = useLogger();
 import { ref } from "vue";
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 // import { isRef } from "vue";
 // import { toRef } from "vue";
 // import { invoke } from "@tauri-apps/api/core";
@@ -12,7 +12,7 @@ import { listen } from "@tauri-apps/api/event";
 import * as ssg from "./sharestatestore";
 import {ssscp} from "./sharestatestore";
 const sss = ssscp(); sss.useval += 1;
-import * as mylibg from "./mylib";
+import mylib, * as mylibg from "./mylib";
 
 import { getTauriVersion } from '@tauri-apps/api/app';
 import { getCurrent } from '@tauri-apps/api/webview';
@@ -23,8 +23,9 @@ let tauri_setup_event_listener_timer = null;
 let tauri_setup_event_listener_cnter = 0;
 async function setuptaurieventlisten() {
     sss.intowinload = true;
-    console.log("begin setup tauri event listener");
-    
+    // console.log("begin setup tauri event listener");
+    mylibg.uiinfo("begin setup tauri event listener");
+
     // android: cachted Command plugin: event|listen not allowed by ACL
     // https://github.com/tauri-apps/tauri/issues/9502#issuecomment-2081478814
     // reload page works
@@ -41,14 +42,16 @@ async function setuptaurieventlisten() {
             tauri_setup_event_listener_timer = null;
         }
     }).catch((err)=> {
+        mylibg.errprt(err);
         sss.tauriunlsnfn = 'catched ' + err;
         if (tauri_setup_event_listener_timer == null) {
             tauri_setup_event_listener_timer = window.setTimeout(setuptaurieventlisten, 1234);
         }
     });
-    console.log("after setup tauri event listener", sss.tauriunlsnfn);
+    // console.log("after setup tauri event listener", sss.tauriunlsnfn);
+    mylibg.uiwarn("after setup tauri event listener @evtchan", sss.tauriunlsnfn);
     log.warn("hehhehhe",123);
-    mylibg.remlogo("tauri setup global event listener @evtchan.", sss.tauriunlsnfn);
+    // mylibg.remlogo("tauri setup global event listener @evtchan.", sss.tauriunlsnfn);
 }
 let webviewgetsize_timer = null;
 function webviewgetsize() {
@@ -61,6 +64,7 @@ function webviewgetsize() {
             }
         })
         .catch((err)=> {
+            mylibg.errprt(err);
             sss.webviewsize = ''+err;
             log.warn("faild", err);
             if (webviewgetsize_timer == null) {
@@ -75,19 +79,22 @@ function getrunenvinfo() {
         sss.isandroid = true;
     }
     sss.isandroid = true;
-    mylibg.setsss(sss);
 
-    mylibg.rununtil(1234, ()=> {
+    mylibg.rununtil(mylibg.randnb(500, 1000), ()=> {
         let stop = false;
         getTauriVersion()
         .then((ver)=>{ sss.trappver = ''+ver; stop = true; })
-        .catch((err)=> { sss.trappver = ''+err; stop = false;});
+        .catch((err)=> {mylibg.errprt(err); sss.trappver = ''+err; stop = false;});
         return stop;
     });
-
+    
     // window.screen, android 0,0???
-    sss.scnhgt = window.screen.height;
-    sss.scnwdt = window.screen.width;
+    mylibg.rununtil(mylibg.randnb(500, 1000), ()=> {
+        sss.scnhgt = window.screen.height;
+        sss.scnwdt = window.screen.width;
+        return sss.scnhgt != 0;
+    });
+    
     /*
     var win = window,
     doc = document,
@@ -98,15 +105,30 @@ function getrunenvinfo() {
 alert(x + ' × ' + y);
     */
     // , android 0,0???
-    sss.wndhgt = window.innerHeight;
-    sss.wndwdt = window.innerWidth;
+    mylibg.rununtil(mylibg.randnb(500, 1000), ()=> {
+        sss.wndhgt = window.innerHeight;
+        sss.wndwdt = window.innerWidth;
+        return sss.wndhgt != 0;
+    });
+
+    // 这个值在 android 上获取不到呢???
+    // sss.vuejsver = ssg.getVueVer();
+    mylibg.rununtil(mylibg.randnb(500, 1000), (app)=> {
+        if (sss.vuejsver != '') return true;
+        sss.vuejsver = app.version != "" ? app.version : ssg.getVueVer();
+        return sss.vuejsver != "";
+    }, sss.vapp);
 }
 function ontopwinresize(evt) {
-    console.log("topwin resized", evt);
+    // console.log("topwin resized", evt);
+    mylibg.uidebug("topwin resized", evt);
 }
 window.addEventListener('load', (evt) => {
-    console.log("window load", evt);
-    console.log(location.href, navigator.userAgent);
+    // console.log("window load", evt);
+    mylibg.uidebug("window load", evt);
+    // console.log(location.href, navigator.userAgent);
+    sss.loadmnt.push("win.load");
+    mylibg.setsss(sss);
     setuptaurieventlisten();
     // permission not allow...
     // getCurrent().size().then((szo)=>{ sss.webviewsize = ''+szo});
@@ -114,11 +136,17 @@ window.addEventListener('load', (evt) => {
     getrunenvinfo();
 })
 window.addEventListener("resize", ontopwinresize);
-// window.load 在 onMounted 之后/之前/不确定???
+// window.load 在 onMounted 之后/之前/不确定???  之之之后
+// onMounted 在 android 上没有执行？？？
 onMounted(() => {
-    console.log(`the component is now mounted.`,ssg.getVueFile());
-    sss.vuejsver = ssg.getVueVer();
-})
+    // console.log(`the component is now mounted.`,ssg.getVueFile());
+    mylibg.uidebug("mounted")
+    sss.loadmnt.push("vue.mount");
+});
+onUnmounted(()=> {
+    // console.log(`the component is now unmounted`, ssg.getVueFile());
+    mylibg.uidebug("unmounted")
+});
 
 // console.log("start");
 // const unlisten = await listen<string>('evtchan', (evt) => {
@@ -165,9 +193,8 @@ for (let i = 0; i < 30; i++) {
     romlst.push(item0);
     romlst.push(item4);
 }
-console.warn("hhehheeddd", items.length);
-
-
+// dont log state var in global????
+// console.warn("hhehheeddd", items.length);
 
 ///
 
@@ -201,11 +228,13 @@ function switchtabpage(idx : number) :number {
         }
     }
     ons[idx] = true;
-    console.log("curidx " + oldidx + " => " + idx);
-    mylibg.addmylog(sss.loglst, "curidx " + oldidx + " => " + idx);
-    }catch(e) {
-        console.log(e);
-        mylibg.addmylog(sss.loglst, e);
+    // console.log("curidx " + oldidx + " => " + idx);
+    mylibg.uiinfo("curidx " + oldidx + " => " + idx);
+    // mylibg.addmylog(sss.loglst, "curidx " + oldidx + " => " + idx);
+    }catch(err) {
+        console.log(err);
+        mylibg.uierror(err);
+        // mylibg.addmylog(sss.loglst, err);
     }
 
     return oldidx;
@@ -232,7 +261,7 @@ function nexttabpage(prev : boolean) {
             nxtidx = nxtidx % (ons.length);
         }
     }
-    console.log("tabidx", curidx, "=>", nxtidx);
+    // console.log("tabidx", curidx, "=>", nxtidx);
     sss.tpcuridx1 = nxtidx;
     switchtabpage(nxtidx)
 }
@@ -294,7 +323,8 @@ let items5 = [
                     { name : "First <<"},{name: "Last >>"},
                     { isDivider: true },
                     // { name: "-------", disable: true},
-                    {name: "msglst"}, {name: "logui"}, ]
+                    { name: "group list"},
+                    {name: "message List"}, {name: "logui"}, ]
         },
         {
             name: "Misc",

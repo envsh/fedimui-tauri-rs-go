@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { getCurrentInstance } from "vue";
 // in Component.vue
 // const app = getCurrentApp()
+// sometimes not work
 export function getCurrApp() {
     let app = getCurrentInstance().appContext.app;
     return app;
@@ -63,7 +64,7 @@ export let ssscp = defineStore({
         // tabpage2show: true,// as CreateMutable<boolean>,      
         
         // stats
-        vapp :  null,
+        vapp :  null, // noref
         evtlsned : ref(false),
         intowinload: ref(false),
         userAgent: ref(""),
@@ -76,6 +77,7 @@ export let ssscp = defineStore({
         wndhgt: ref(0),
         scnwdt: ref(0),
         scnhgt: ref(0),
+        loadmnt: ref([]),
 
         rcvevtcnt: ref(0),
         lastlog: ref(""),

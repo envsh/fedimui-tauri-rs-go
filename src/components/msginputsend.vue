@@ -1,10 +1,13 @@
 
 <script setup lang="ts">
 // import {ref} from 'vue';
+import * as vue from 'vue';
 import * as mylibg from '../mylib';
 import { ssscp } from '../sharestatestore';
 let sss = ssscp(); sss.useval +=1;
 import * as ssg from '../sharestatestore';
+
+vue.onMounted(()=>{mylibg.uidebug("mounted")});
 
 let items2 = sss.msglst;
 let items3 = sss.msglst;
@@ -42,9 +45,10 @@ async function sendmsg() {
     // ssg.msglstScrollHeadTail(false);
     // window.setTimeout();
     mylibg.runonce(()=>{ssg.msglstScrollHeadTail(false);}, 3333);
-    }).catch((e) => {
-        console.log("somerr", e);
-        mylibg.addmylog2("somerr", e);
+    }).catch((err) => {
+        mylibg.errprt(err);
+        console.log("somerr", err);
+        mylibg.addmylog2("somerr", err);
     });
 }
 

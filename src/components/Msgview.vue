@@ -1,10 +1,15 @@
 <script setup lang="ts">
 // import { Vue } from "vue";
 // import { ref } from "vue";
+import * as vue from 'vue';
 // import { invoke } from "@tauri-apps/api/tauri";
 // import { VueVirtualScroller } from 'vue-virtual-scroller';
 import {ssscp} from "../sharestatestore";
 const sss = ssscp(); sss.useval += 1;
+import * as mylig from '../mylib';
+
+vue.onMounted(()=>{mylig.uidebug('mounted')});
+vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
 
 // export default {
 //     components: {
@@ -26,7 +31,7 @@ const sss = ssscp(); sss.useval += 1;
 //     items.push("field字段"+i);
 // }
 // console.log(items.length);
-console.warn("hhehheeddd", sss.useval);
+// console.warn("hhehheeddd", sss.useval);
 
 </script>
 
