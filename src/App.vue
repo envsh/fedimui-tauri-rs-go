@@ -307,14 +307,14 @@ import { DockMenu } from "vue-dock-menu";
 import "vue-dock-menu/dist/vue-dock-menu.css";
 ssg.getCurrApp().component('vue-dock-menu', DockMenu);
 // how modify menu runtime???
-let items5 = [
+let mainmenu_items = [
         {
           name: "File",
           menu: [{ name: "Open"}, {name: "New Window"}, {name: "Exit"}]
         },
         {
           name: "Edit",
-          menu: [{ name: "Cut"}, {name: "Copy"}, {name: "Paste"}]
+          menu: [{ name: "Cut剪切"}, {name: "Copy"}, {name: "Paste"}]
         },
         {
             name: "Window",
@@ -324,7 +324,8 @@ let items5 = [
                     { isDivider: true },
                     // { name: "-------", disable: true},
                     { name: "group list"},
-                    {name: "message List"}, {name: "logui"}, ]
+                    {name: "message List"}, {name: "logui"}, 
+                    {name: "about"}, {name: "testui"},]
         },
         {
             name: "Misc",
@@ -332,16 +333,44 @@ let items5 = [
         },
         {
             name: "Dev",
-            menu: [{ name : "Reload"}, {name: "DevTool"}, {name: "eee"}]
+            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "eee"}]
         },
         {
             name: "Help",
-            menu: [{ name : "Reload"}, {name: "ddd"}, {name: "eee"}]
+            menu: [{ name : "Reload"},{name: "about"},
+                {name: "ddd"}, {name: "eee"}]
         },
 
       ];
+
+let mainmenu_funcs = {
+    "misc>upcnt":  upcnt,
+
+    "window>prev <": ()=>{ nexttabpage(true) },
+    "window>next >": ()=>{ nexttabpage(false)},
+    "window>first <<": ()=> {switchtabpage(0)},
+    "window>last >>": ()=> {switchtabpage(8)},
+    "window>group list": ()=> {switchtabpage(2)},
+    "window>message list": ()=> {switchtabpage(1)}, 
+    "window>logui": ()=> {switchtabpage(6)},
+    "window>about": ()=> {switchtabpage(4)}, 
+    "window>testui": ()=> {switchtabpage(5)}, 
+    "help>about": ()=> {switchtabpage(4)}, 
+
+    "dev>reload": reloadui,
+    "dev>devtools": ()=> { mylibg.devtools() }, // why mylibg.devtools not work
+
+    "misc>scroll bottom": ()=>{ssg.msglstScrollHeadTail(false)},
+    "misc>scroll top": ()=>{ssg.msglstScrollHeadTail(true)},
+}
 function mainmenu_selected(item) {
-    console.log("mmsel", item);
+    // console.log("mmsel", item); // {name:, path:}
+    let fn = mainmenu_funcs[item.path];
+    if (fn != null) {
+        fn();
+    }else{
+        mylibg.uiwarn("menu func not found", item.path);
+    }
 }
 
 
@@ -351,7 +380,7 @@ function mainmenu_selected(item) {
 <template>
   <!-- <vue-navigation-bar :options="navbarOptions" /> -->
   <div id="mainmenu">
-  <vue-dock-menu :items="items5" :on-selected="mainmenu_selected" style="margin: 0px;">
+  <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;">
   </vue-dock-menu>
     </div>
 

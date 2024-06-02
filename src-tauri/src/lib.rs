@@ -1,7 +1,7 @@
 
 extern crate libc;
 // use libc::c_char;
-use std::ffi::CStr;
+// use std::ffi::CStr;
 extern crate log;
 extern crate env_logger;
 extern crate rspp;
@@ -20,7 +20,7 @@ fn greet(name: &str) -> String {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![greet,callfwdgo])
+        .invoke_handler(tauri::generate_handler![greet,callfwdgo,devtools])
         .setup(|app| {
             let _a2 : &mut tauri::App = app;
             let pkginfo = app.package_info();
@@ -69,10 +69,37 @@ fn callfwdgo(jstr: String) -> String {
     rspp::cfree_usize(prm.resp);
     return rspcc;
 }
+#[tauri::command(async)]
+fn devtools(jstr: String) -> String {
+    log::debug!("reqdata={}", jstr);
+    remlogo(format!("reqdata={}", jstr));
+    let mut res = "";
+    let app = trappget();
+    // let mut app = trappget();
+    // unsafe {
+    //     // let app : &mut tauri::App = rspp::globvarget(trapp);
+    //     app = rspp::globvarget(trapp);
+    // }
+
+    let window = app.get_webview_window("main").unwrap();
+    if !window.is_devtools_open() {
+        window.open_devtools();
+            // window.close_devtools();
+        res = "open ok"
+    }else {
+        // window.open_devtools();
+        window.close_devtools();
+        res = "close ok"
+    }
+
+    return res.into()
+}
 
 #[allow(non_upper_case_globals)]
 static mut trapp : usize = 0;
-// static mut trapp : tauri::app = tauri::app::default();
+// static mut trapp : tauri::App = tauri::app::default();
+fn trappget() -> &'static mut tauri::App { unsafe{ rspp::globvarget(trapp) } }
+
 #[no_mangle]
 pub extern "C"
 fn taurirs_ffi_emitfwdts(v: &mut rspp::ffiparam) {

@@ -30,6 +30,13 @@ function dummy() {
 
 ///////////// tauri rpc
 
+// android not work for Webview API not avalilable on mobile
+export async function devtools() {
+    let close = true;
+    let arg = close ? "close":"open";
+    let retval = invoke<string>("devtools", {jstr:arg});
+    retval.catch(errprt);
+}
 // todo result format
 export
 async function callfwdgo(cmd : string, args : [any]) : Promise<string> {
@@ -67,7 +74,7 @@ async function addnum(val: number | string, ...args : any) : Promise<string> {
 
 export
 async function remlogo(...args : any) /*: Promise<string>*/ {
-    let respval = await callfwdgo("remlog", args);    
+    let respval = await callfwdgo("remlog", args);
     // let jso = JSON.parse(respval);
     // console.log(jso.retc, jso.retv);
     // addmylog2(jso.retc,  jso.retv);
@@ -79,6 +86,8 @@ async function remlogo(...args : any) /*: Promise<string>*/ {
     let idt = ''+ getcallerinfo(1);
     addmylog2(idt, "remlog", ...args);
 }
+
+
 function uilogimpl(...args : any) {
     let idt = ''+ getcallerinfo(2);
     // console.log("idt...", idt);
@@ -139,6 +148,7 @@ export function addmylog2(...args) {
         if (sss.loglst.length > 286) {
             sss.loglst.splice(0, 10);
         }
+        sss.lastlog = str;
     }else{
         sssloglsttmp.push(str);
     }
