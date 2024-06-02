@@ -72,6 +72,11 @@ export let ssscp = defineStore({
         trappver: ref(""),
         webviewsize: ref(""),
         vuejsver: ref(""),
+        wndwdt: ref(0),
+        wndhgt: ref(0),
+        scnwdt: ref(0),
+        scnhgt: ref(0),
+
         rcvevtcnt: ref(0),
         lastlog: ref(""),
     }),

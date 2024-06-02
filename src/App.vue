@@ -18,6 +18,7 @@ import { getTauriVersion } from '@tauri-apps/api/app';
 import { getCurrent } from '@tauri-apps/api/webview';
 // const appVersion = await getVersion();
 
+
 let tauri_setup_event_listener_timer = null;
 let tauri_setup_event_listener_cnter = 0;
 async function setuptaurieventlisten() {
@@ -75,9 +76,33 @@ function getrunenvinfo() {
     }
     sss.isandroid = true;
     mylibg.setsss(sss);
-    getTauriVersion()
-        .then((ver)=>{ sss.trappver = ''+ver })
-        .catch((err)=> { sss.trappver = ''+err });
+
+    mylibg.rununtil(1234, ()=> {
+        let stop = false;
+        getTauriVersion()
+        .then((ver)=>{ sss.trappver = ''+ver; stop = true; })
+        .catch((err)=> { sss.trappver = ''+err; stop = false;});
+        return stop;
+    });
+
+    // window.screen, android 0,0???
+    sss.scnhgt = window.screen.height;
+    sss.scnwdt = window.screen.width;
+    /*
+    var win = window,
+    doc = document,
+    docElem = doc.documentElement,
+    body = doc.getElementsByTagName('body')[0],
+    x = win.innerWidth || docElem.clientWidth || body.clientWidth,
+    y = win.innerHeight|| docElem.clientHeight|| body.clientHeight;
+alert(x + ' × ' + y);
+    */
+    // , android 0,0???
+    sss.wndhgt = window.innerHeight;
+    sss.wndwdt = window.innerWidth;
+}
+function ontopwinresize(evt) {
+    console.log("topwin resized", evt);
 }
 window.addEventListener('load', (evt) => {
     console.log("window load", evt);
@@ -88,10 +113,11 @@ window.addEventListener('load', (evt) => {
     webviewgetsize();
     getrunenvinfo();
 })
-// window.load 在 onMounted 之后
+window.addEventListener("resize", ontopwinresize);
+// window.load 在 onMounted 之后/之前/不确定???
 onMounted(() => {
-  console.log(`the component is now mounted.`,ssg.getVueFile());
-  sss.vuejsver = ssg.getVueVer();
+    console.log(`the component is now mounted.`,ssg.getVueFile());
+    sss.vuejsver = ssg.getVueVer();
 })
 
 // console.log("start");
@@ -251,6 +277,7 @@ function reloadui() { location.reload(); }
 import { DockMenu } from "vue-dock-menu";
 import "vue-dock-menu/dist/vue-dock-menu.css";
 ssg.getCurrApp().component('vue-dock-menu', DockMenu);
+// how modify menu runtime???
 let items5 = [
         {
           name: "File",
@@ -259,15 +286,35 @@ let items5 = [
         {
           name: "Edit",
           menu: [{ name: "Cut"}, {name: "Copy"}, {name: "Paste"}]
-        }
+        },
+        {
+            name: "Window",
+            iconSlot: "window",
+            menu: [ {name: "Prev <"}, {name: "Next >"}, 
+                    { name : "First <<"},{name: "Last >>"},
+                    { isDivider: true },
+                    // { name: "-------", disable: true},
+                    {name: "msglst"}, {name: "logui"}, ]
+        },
+        {
+            name: "Misc",
+            menu: [{ name : "upcnt"}, {name: "Scroll Top"}, {name: "Scroll Bottom"}]
+        },
+        {
+            name: "Dev",
+            menu: [{ name : "Reload"}, {name: "DevTool"}, {name: "eee"}]
+        },
+        {
+            name: "Help",
+            menu: [{ name : "Reload"}, {name: "ddd"}, {name: "eee"}]
+        },
+
       ];
 function mainmenu_selected(item) {
     console.log("mmsel", item);
 }
 
-import { VueScreenSizeMixin } from 'vue-screen-size';
-let vssmixins = [VueScreenSizeMixin];
-// Access `this.$vssWidth`, `this.$vssHeight`, and `this.$vssEvent` in your component.
+
 
 </script>
 

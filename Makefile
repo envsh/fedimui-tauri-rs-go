@@ -28,7 +28,7 @@ gensignkey:
 	ls -lh keystore.jks
 
 apksign:
-	JAVA_HOME=/nix/store/rflj4qrjp5km8kqfwh2s70s64y4d904v-zulu-ca-jdk-17.0.10/ /opt/android-sdk/build-tools/30.0.3/apksigner sign --ks ../seckeys/apksign_keystore.jks ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+	JAVA_HOME=/nix/store/rflj4qrjp5km8kqfwh2s70s64y4d904v-zulu-ca-jdk-17.0.10/ /opt/android-sdk/build-tools/30.0.3/apksigner sign --ks-pass pass:changeit --ks ../seckeys/apksign_keystore.jks ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
 
 apkinst:
 	/opt/android-sdk/adbtools/adb install ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk

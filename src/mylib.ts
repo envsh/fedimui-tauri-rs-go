@@ -105,6 +105,90 @@ function addmylog(lst, ...args) {
     lst.push(str);
 }
 
+//////////////
+// once, or until, or forever
+class fnrunner {
+    mode: string = "once" // once, until, forever, times
+    ms : number
+    times: number = -1
+    f : any
+    args: any
+    tmer : number
+    cnter : number = 0
+    btime = new Date()
+    
+    constructor(mode, ms, times, f, ...args) {
+        this.f = f;
+        this.ms = ms;
+        this.times = times;
+        this.args = args;
+    }
+    run() {
+        switch (this.mode) {
+            case "once":
+                this.runonce(); break;
+            case "until":
+                this.rununtil(); break;
+            case "forever":
+                this.runforever(); break;
+            case "times":
+                this.runtimes(); break;
+            default:
+                console.log("unsupport", this.mode);
+        }
+    }
+    runonce() {
+        this.tmer = setTimeout((me) => {
+            this.f(...me.args);
+            clearTimeout(me.tmer);
+            console.log("runok", me.mode, me.ms, me.args);
+        }, this.ms, this);
+    }
+    rununtil() {
+        this.tmer = setTimeout((me) => {
+            me.cnter++;
+            let stop = this.f(...me.args);
+            if (stop) {
+                clearTimeout(me.tmer);
+                console.log("runok", me.mode, me.ms, me.args, me.cnter);
+            }else {
+                console.log("rungoon",  me.mode, me.ms, me.args, me.cnter);
+            }
+        }, this.ms, this);
+    }
+    runforever() {
+        this.tmer = setTimeout((me) => {
+            me.cnter++;
+            this.f(...me.args);
+            // clearTimeout(o.tmer);
+            // console.log("runok", o.ms, o.args);
+        }, this.ms, this);
+    }
+    runtimes() {
+        this.tmer = setTimeout((me) => {
+            me.cnter++;
+            this.f(...me.args);
+            if (me.cnter>me.times) {
+                clearTimeout(me.tmer);
+                console.log("runok", me.mode, me.ms, me.args);
+            }
+        }, this.ms, this);
+    }
+}
+export function runonce(ms, f, ...args) {
+     (new fnrunner("once", ms, -1, f, ...args)).run();
+}
+export function rununtil(ms, f, ...args) {
+     (new fnrunner("until", ms, -1, f, ...args)).run();
+}
+export function runforever(ms, f, ...args) {
+     (new fnrunner("forever", ms, -1, f, ...args)).run();
+}
+export function runtimes(ms, times, f, ...args) {
+     (new fnrunner("times", ms, times, f, ...args)).run();
+}
+
+
 ///////
 export 
 class ffiparam {

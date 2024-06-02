@@ -39,7 +39,9 @@ async function sendmsg() {
 
     console.log("curmsglstcnt", items3.length);
     mylibg.addmylog2("curmsglstcnt", items3.length);
-    ssg.msglstScrollHeadTail(false);
+    // ssg.msglstScrollHeadTail(false);
+    // window.setTimeout();
+    mylibg.runonce(()=>{ssg.msglstScrollHeadTail(false);}, 3333);
     }).catch((e) => {
         console.log("somerr", e);
         mylibg.addmylog2("somerr", e);
