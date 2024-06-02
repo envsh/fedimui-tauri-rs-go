@@ -3,6 +3,7 @@
 import { useLogger } from "vue-logger-plugin";
 const log = useLogger();
 import { ref } from "vue";
+import { onMounted } from 'vue'
 // import { isRef } from "vue";
 // import { toRef } from "vue";
 // import { invoke } from "@tauri-apps/api/core";
@@ -59,15 +60,14 @@ function webviewgetsize() {
             }
         })
         .catch((err)=> {
+            sss.webviewsize = ''+err;
             log.warn("faild", err);
             if (webviewgetsize_timer == null) {
                 webviewgetsize_timer = window.setTimeout(webviewgetsize, 2345);
             }
         });
 }
-window.addEventListener('load', (evt) => {
-    console.log("window load", evt);
-    console.log(location.href, navigator.userAgent);
+function getrunenvinfo() {
     sss.weburl = location.href;
     sss.userAgent = navigator.userAgent;
     if (navigator.userAgent.indexOf('ndroid') != -1) {
@@ -75,11 +75,23 @@ window.addEventListener('load', (evt) => {
     }
     sss.isandroid = true;
     mylibg.setsss(sss);
+    getTauriVersion()
+        .then((ver)=>{ sss.trappver = ''+ver })
+        .catch((err)=> { sss.trappver = ''+err });
+}
+window.addEventListener('load', (evt) => {
+    console.log("window load", evt);
+    console.log(location.href, navigator.userAgent);
     setuptaurieventlisten();
-    getTauriVersion().then((ver)=>{ sss.trappver = ''+ver });
     // permission not allow...
     // getCurrent().size().then((szo)=>{ sss.webviewsize = ''+szo});
     webviewgetsize();
+    getrunenvinfo();
+})
+// window.load 在 onMounted 之后
+onMounted(() => {
+  console.log(`the component is now mounted.`,ssg.getVueFile());
+  sss.vuejsver = ssg.getVueVer();
 })
 
 // console.log("start");
@@ -215,22 +227,71 @@ function switchtabpagebyname(name : string) {
 function upcnt() { sss.useval++; }
 function reloadui() { location.reload(); }
 
+// import brandImage from '../src/assets/images/lockup-color.png'
+// let navbarOptions = {
+//           elementId: "main-navbar",
+//           menuOptionsLeft: [
+//             {
+//               type: "link",
+//               text: "Pricing",
+//             //   path: { name: "pricing"},
+//               iconRight: '<i class="fa fa-long-arrow-right fa-fw"></i>',
+//             },
+//           ],
+//           menuOptionsRight: [
+//             {
+//               type: "button",
+//               text: "Signup",
+//             //   path: { name: "signup" },
+//               class: "button-red"
+//             },
+//           ]
+//     };
+
+import { DockMenu } from "vue-dock-menu";
+import "vue-dock-menu/dist/vue-dock-menu.css";
+ssg.getCurrApp().component('vue-dock-menu', DockMenu);
+let items5 = [
+        {
+          name: "File",
+          menu: [{ name: "Open"}, {name: "New Window"}, {name: "Exit"}]
+        },
+        {
+          name: "Edit",
+          menu: [{ name: "Cut"}, {name: "Copy"}, {name: "Paste"}]
+        }
+      ];
+function mainmenu_selected(item) {
+    console.log("mmsel", item);
+}
+
+import { VueScreenSizeMixin } from 'vue-screen-size';
+let vssmixins = [VueScreenSizeMixin];
+// Access `this.$vssWidth`, `this.$vssHeight`, and `this.$vssEvent` in your component.
 
 </script>
 
 <template>
-    <div > {{ sss.useval }} 
+  <!-- <vue-navigation-bar :options="navbarOptions" /> -->
+  <div id="mainmenu">
+  <vue-dock-menu :items="items5" :on-selected="mainmenu_selected" style="margin: 0px;">
+  </vue-dock-menu>
+    </div>
+
+            <!-- like toolbar -->
+    <div style="position: absolute;top:35px;" > {{ sss.useval }} 
         <span><button @click="upcnt()">upcnt</button>
             <button @click="reloadui()">reload</button></span>
             <span>isand {{ sss.isandroid }}</span>
-            &nbsp; <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }}</span>
+            &nbsp;
+            <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }} </span>
         </div>
 
-    <div  style="width: auto; height: 650px; ">
-        
+    <div  style="width: auto; height: 650px;">
+
         <!-- <groupview/> -->
         <!-- left: 36% -> 0, width: 64% -> 0  -->
-        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 4%; ">
+        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 60px; ">
             <div style="background-color:#666;">
                 <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
                     </span>

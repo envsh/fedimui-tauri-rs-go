@@ -6,6 +6,9 @@ rslib:
 pcapp:
 	npm run tauri build --no-bundle
 
+genmob:
+	NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/ ./node_modules/.bin/tauri android init
+
 # todo
 # Unknown Kotlin JVM target: 22
 # 指定 jdk17的目录即可。
@@ -41,11 +44,13 @@ golib:
 # cd src-go && go build - android -arch aarch64 -o libuigo.so
 
 alogc:
-	/opt/android-sdk/adbtools/adb logcat | grep -i golog
+	/opt/android-sdk/adbtools/adb logcat | grep -i tauri
 
 rsdoc:
 	cd src-tauri && cargo doc --open -p log -p env_logger -p tauri
 
 # just demo
-up:
+updemo:
 	cargo update foo --precise 1.2.3
+uptr:
+	cd src-tauri && cargo update tauri --precise 2.0.0-beta.20

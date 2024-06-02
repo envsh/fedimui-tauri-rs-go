@@ -24,6 +24,9 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+// import VueNavigationBar from 'vue-navigation-bar';
+// import 'vue-navigation-bar/dist/vue-navigation-bar.css';
+// import {useRouter} from 'vue-router'
 
 const vuetify = createVuetify({
     components,
@@ -52,7 +55,17 @@ const logger = createLogger({
   });
 
 // createApp(App).mount("#app");
-createApp(App).use(logger).use(piniafy).use(vuetify).mount("#app");
+const vapp = createApp(App);
+// let cpx = vapp.component('vue-navigation-bar', VueNavigationBar);
+// cpx.config.compilerOptions.isCustomElement = ()=>{return true};
+vapp.use(logger).use(piniafy).use(vuetify);
+  
+// https://pinia.vuejs.org/core-concepts/outside-component-usage.html
+// after installing the pinia plugin with app.use(pinia) will work:
+import {ssscp} from "./sharestatestore";
+const sss = ssscp(); sss.useval += 1;
+sss.vapp = vapp;
+vapp.mount("#app");
 
 console.log("will run here???");
 logger.warn("fff");

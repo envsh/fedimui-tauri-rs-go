@@ -15,7 +15,9 @@
     "pinia": "^2.1.7",
     "pino": "^9.1.0",
     "vue": "^3.3.4",
+    "vue-dock-menu": "^1.1.0",
     "vue-logger-plugin": "^2.2.3",
+    "vue-navigation-bar": "^6.1.0",
     "vuetify": "^3.6.8",
     "winston": "^3.13.0"
   },

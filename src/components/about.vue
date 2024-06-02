@@ -25,6 +25,7 @@ const sss = ssscp(); sss.useval += 1;
     <p>userAgent: {{ sss.userAgent }} </p>
     <p>rcvevtcnt: {{ sss.rcvevtcnt }}</p>
     <p>webviewsize: {{ sss.webviewsize }}</p>
+    <p>vuejsver: {{ sss.vuejsver }}</p>
   <!-- <form class="row" @submit.prevent="greet">
     <span> on the Tauri, Vite, and Vue logos to learn more.</span>
     <input id="greet-input" v-model="name" placeholder="Enter a name..." />

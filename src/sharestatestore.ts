@@ -3,6 +3,23 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 // import { reactive, toRefs } from "vue";
 
+import { getCurrentInstance } from "vue";
+// in Component.vue
+// const app = getCurrentApp()
+export function getCurrApp() {
+    let app = getCurrentInstance().appContext.app;
+    return app;
+}
+export function getVueFile() {
+    let app = getCurrApp();
+    let segs = app._component.__file.split('/');
+    return segs[segs.length-1];
+}
+export function getVueVer() {
+    let app = getCurrApp();
+    return app.version;
+}
+
 // Removes 'readonly' attributes from a type's properties
 // type CreateMutable<Type> = {
 //     -readonly [Property in keyof Type]: Type[Property];
@@ -46,6 +63,7 @@ export let ssscp = defineStore({
         // tabpage2show: true,// as CreateMutable<boolean>,      
         
         // stats
+        vapp :  null,
         evtlsned : ref(false),
         intowinload: ref(false),
         userAgent: ref(""),
@@ -53,12 +71,15 @@ export let ssscp = defineStore({
         tauriunlsnfn: ref(""),
         trappver: ref(""),
         webviewsize: ref(""),
+        vuejsver: ref(""),
         rcvevtcnt: ref(0),
         lastlog: ref(""),
     }),
     
     actions: {
-
+        ctor() {
+            console.log("sss ctor???");
+        },
 
         f1() {
 
