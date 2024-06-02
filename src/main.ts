@@ -54,11 +54,29 @@ const logger = createLogger({
     // afterHooks: [ ... ]
   });
 
+// import VueRouter from 'vue-router';
+import {createMemoryHistory, createRouter } from 'vue-router';
+const router = createRouter({
+    // 路由配置
+    routes: [
+        // {
+        //   path: '/',
+        // //   component: Home
+        // },
+        // {
+        //   path: '/about',
+        // //   component: About
+        // }
+      ],
+    history: createMemoryHistory(),
+});
+
 // createApp(App).mount("#app");
 const vapp = createApp(App);
 // let cpx = vapp.component('vue-navigation-bar', VueNavigationBar);
 // cpx.config.compilerOptions.isCustomElement = ()=>{return true};
 vapp.use(logger).use(piniafy).use(vuetify);
+vapp.use(router);
   
 // https://pinia.vuejs.org/core-concepts/outside-component-usage.html
 // after installing the pinia plugin with app.use(pinia) will work:

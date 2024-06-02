@@ -232,7 +232,7 @@ function switchtabpage(idx : number) :number {
     mylibg.uiinfo("curidx " + oldidx + " => " + idx);
     // mylibg.addmylog(sss.loglst, "curidx " + oldidx + " => " + idx);
     }catch(err) {
-        console.log(err);
+        // console.log(err);
         mylibg.uierror(err);
         // mylibg.addmylog(sss.loglst, err);
     }
@@ -333,7 +333,7 @@ let mainmenu_items = [
         },
         {
             name: "Dev",
-            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "eee"}]
+            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "sidebar"}]
         },
         {
             name: "Help",
@@ -359,6 +359,7 @@ let mainmenu_funcs = {
 
     "dev>reload": reloadui,
     "dev>devtools": ()=> { mylibg.devtools() }, // why mylibg.devtools not work
+    "dev>sidebar": ()=> { sidebarshow.value = !sidebarshow.value;},
 
     "misc>scroll bottom": ()=>{ssg.msglstScrollHeadTail(false)},
     "misc>scroll top": ()=>{ssg.msglstScrollHeadTail(true)},
@@ -373,8 +374,48 @@ function mainmenu_selected(item) {
     }
 }
 
+////////
+//App.vue
+import { SidebarMenu } from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+// export default {
+//   components: {
+//     SidebarMenu,
+//   },
+// }
+ssg.getCurrApp().component('sidebar-menu', SidebarMenu);
 
+let sidebarmenus = [
+          {
+            header: 'Main Navigation',
+            hiddenOnCollapse: true,
+          },
+          {
+            // href: '/Home',
+            title: 'Dashboard',
+            icon: 'fa fa-user',
+          },
+          {
+            // href: '/charts',
+            title: 'Charts',
+            icon: 'fa fa-chart-area',
+            child: [
+              {
+                // href: '/charts/sublink',
+                title: 'Sub Link',
+              },
+            ],
+          },
+        ];
+function sidebar_menuitem_clicked(x,y) {
+    mylibg.uiinfo(x, y);
+    console.log(y);
+}
+function sidebar_menu_folder(fold) {
+    mylibg.uiinfo(fold);
 
+}
+let sidebarshow = ref(true);
 </script>
 
 <template>
@@ -382,6 +423,10 @@ function mainmenu_selected(item) {
   <div id="mainmenu">
   <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;">
   </vue-dock-menu>
+    </div>
+    <div v-show="sidebarshow" id="sidebarmenu" style="position: absolute; top: 50px;">
+  <sidebar-menu :menu="sidebarmenus" @item-click="sidebar_menuitem_clicked" @update:collapsed="sidebar_menu_folder" style="margin: 0px;">
+  </sidebar-menu>
     </div>
 
             <!-- like toolbar -->

@@ -18,6 +18,8 @@
     "vue-dock-menu": "^1.1.0",
     "vue-logger-plugin": "^2.2.3",
     "vue-navigation-bar": "^6.1.0",
+    "vue-router": "^4.3.2",
+    "vue-sidebar-menu": "^5.4.0",
     "vuetify": "^3.6.8",
     "winston": "^3.13.0"
   },
