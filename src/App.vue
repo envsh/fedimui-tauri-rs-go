@@ -416,6 +416,20 @@ function sidebar_menu_folder(fold) {
 
 }
 let sidebarshow = ref(true);
+
+function onSwipeLeftItem(x,y) {
+    mylibg.uiinfo(x,y);
+
+    if (x == "right") {
+        if (sidebarshow.value != true) {
+            sidebarshow.value = true;
+        }
+    } if (x == "left") {
+        if (sidebarshow.value != false) {
+            sidebarshow.value = false;
+        }
+    }
+}
 </script>
 
 <template>
@@ -436,10 +450,11 @@ let sidebarshow = ref(true);
             <span>isand {{ sss.isandroid }}</span>
             &nbsp;
             <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }} </span>
+            <button class="btn" v-touch:swipe.left="onSwipeLeftItem">Swipe left</button>
         </div>
 
-    <div  style="width: auto; height: 650px;">
-
+    <div  style="width: auto; height: 650px;" v-touch:swipe="onSwipeLeftItem">
+        
         <!-- <groupview/> -->
         <!-- left: 36% -> 0, width: 64% -> 0  -->
         <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 60px; ">

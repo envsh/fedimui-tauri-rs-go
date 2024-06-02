@@ -71,12 +71,16 @@ const router = createRouter({
     history: createMemoryHistory(),
 });
 
+// \see https://github.com/robinrodricks/vue3-touch-events?tab=readme-ov-file#events
+import Vue3TouchEvents from "vue3-touch-events";
+
 // createApp(App).mount("#app");
 const vapp = createApp(App);
 // let cpx = vapp.component('vue-navigation-bar', VueNavigationBar);
 // cpx.config.compilerOptions.isCustomElement = ()=>{return true};
 vapp.use(logger).use(piniafy).use(vuetify);
 vapp.use(router);
+vapp.use(Vue3TouchEvents);
   
 // https://pinia.vuejs.org/core-concepts/outside-component-usage.html
 // after installing the pinia plugin with app.use(pinia) will work:
