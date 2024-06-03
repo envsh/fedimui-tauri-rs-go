@@ -475,16 +475,16 @@ const menuData  = {
       children: [
         { label: "New" },
         { label: "Open" },
-        { 
-          label: "Open recent",
-          children: [
-            { label: "File 1...." },
-            { label: "File 2...." },
-            { label: "File 3...." },
-            { label: "File 4...." },
-            { label: "File 5...." },
-          ],
-        },
+        // { 
+        //   label: "Open recent",
+        //   children: [
+        //     { label: "File 1...." },
+        //     { label: "File 2...." },
+        //     { label: "File 3...." },
+        //     { label: "File 4...." },
+        //     { label: "File 5...." },
+        //   ],
+        // },
         { label: "Save", divided: true },
         { label: "Save as..." },
         { label: "Close" },
@@ -502,60 +502,120 @@ const menuData  = {
         { label: "Replace" },
       ],
     },
+    // {
+    //   label: "View",
+    //   children: [
+    //     { label: "Zoom in" },
+    //     { label: "Zoom out" },
+    //     { label: "Reset zoom" },
+    //     { label: "Full screent", divided: true },
+    //     { label: "Find", divided: true },
+    //     { label: "Replace" },
+    //   ],
+    // },
     {
-      label: "View",
+      label: "Window",
       children: [
-        { label: "Zoom in" },
-        { label: "Zoom out" },
-        { label: "Reset zoom" },
-        { label: "Full screent", divided: true },
-        { label: "Find", divided: true },
-        { label: "Replace" },
+        { label: "Previous <", onClick: ()=>{ nexttabpage(true)} },
+        { label: "Next >", onClick:()=>{ nexttabpage(false)} },
+        { label: "First <<", onClick: ()=> {switchtabpage(0)} },
+        { label: "Last >>", onClick: ()=> {switchtabpage(8)}},
+        { label: "Group List", onClick: () =>{switchtabpage(2)} },
+        { label: "Message List", onClick: () =>{ switchtabpage(1) } },
+        { label: "Logui", onClick: ()=> { switchtabpage(6) } },
+        { label: "About", onClick: ()=> { switchtabpage(4) } },
+        { label: "testui", onClick: ()=> { switchtabpage(5)} },
+      ],
+    },
+    {
+      label: "Misc",
+      children: [
+        { label: "Update useval", onClick: upcnt },
+        { label: "Scroll Top", onClick:()=>{ssg.msglstScrollHeadTail(true)} },
+        { label: "Scroll Bottom", onClick: ()=>{ssg.msglstScrollHeadTail(false)} },
+      ],
+    },
+    {
+      label: "Dev",
+      children: [
+        { label: "Reload" , onClick: reloadui},
+        { label: "Devtools", onClick: mylibg.devtools },
+        { label: "Sidebar", onClick: ()=> { sidebarshow.value = !sidebarshow.value;} },
       ],
     },
     {
       label: "Help",
       children: [
-        { label: "About", onClick: ()=>{ mylibg.uidebug("clicked about") } },
+        { label: "About", onClick: ()=>{ switchtabpage(4) } },
       ],
     },
+    // {
+    //   label: "Long long menu text item",
+    // },
   ]
 };
+
+import { FloatMenu } from "vue-float-menu";
+import "vue-float-menu/dist/vue-float-menu.css";
 
 </script>
 
 <template>
-  <!-- <vue-navigation-bar :options="navbarOptions" /> -->
-  <!-- <div id="mainmenu"> -->
-  <!-- <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;"> -->
-<MenuBar :options="menuData" theme="default dark" />
-  <!-- </vue-dock-menu> -->
-    <!-- </div> -->
-    
+    <!-- <vue-navigation-bar :options="navbarOptions" /> -->
+    <!-- vue-dock-menu 在 android 上有bug，点击一个菜单之后要等几秒才能再点击, dep -->
+    <!-- <div id="mainmenu">
+    <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;">
+      </vue-dock-menu>
+    </div> -->
+<!-- <div style="position: absolute; top:0px;"> -->
+<MenuBar id="mainmenu2" :options="menuData" theme="default dark" />
+<!-- </div> -->
+<div>
+    <float-menu
+        :position="'top right'"
+        :dimension="80" :menu-dimension="{height: 0, width: 0}"
+        :theme="{
+            // primary: '#3a3a3a',
+            // textColor: '#000',
+            // menuBgColor: '#fff',
+            // textSelectedColor: '#fff',
+            }">
+                {{ sss.useval }} UV  <br/>
+                    {{ sss.isandroid }} IA  <br/>
+                    {{ sss.rcvevtcnt }} EC <br/>
+                    {{ sss.evtlsned }} EL <br/>
+                    {{ sss.loglst.length }} LC
+    </float-menu>
+</div>
     <div v-show="sidebarshow" id="sidebarmenu" style="position: absolute; top: 50px;">
   <sidebar-menu :menu="sidebarmenus" @item-click="sidebar_menuitem_clicked" @update:collapsed="sidebar_menu_folder" style="margin: 0px;">
   </sidebar-menu>
     </div>
 
         <!-- like toolbar -->
-    <div style="position: absolute;top:35px;" > {{ sss.useval }} 
-        <span><button @click="upcnt()">upcnt</button>
-            <button @click="reloadui()">reload</button></span>
-            <span>isand {{ sss.isandroid }}</span>
-            &nbsp;
-            <span>evtcnt {{ sss.rcvevtcnt }} {{ sss.evtlsned }} </span>
-            <button class="btn" v-touch:tap="btntapshowctxmenu">Swipe left</button>
-        </div>
+    <div style="position: absolute;top:30px;" >
+         <!-- {{ sss.useval }}  -->
+         <span>
+        <!-- <button @click="upcnt()">upcnt</button> -->
+            <VDropdown :overflow-padding="60"  auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
+            <button @click="reloadui()">reload</button>
+            <template #popper="">
+                    <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
+                    Useval: {{ sss.useval }} <br/>
+                    Isandroid: {{ sss.isandroid }} <br/>
+                    evtcnt: {{ sss.rcvevtcnt }}<br/>
+                    evtlsned: {{ sss.evtlsned }}<br/>
+                    Count: {{ sss.loglst.length }}
+            </template>
+            </VDropdown>
+        </span>
+            <!-- <span>isand {{ sss.isandroid }}</span> -->
+            <!-- &nbsp; -->
+            <!-- <span v-tooltip="'evtcnt'"> {{ sss.rcvevtcnt }} </span> &nbsp; -->
+            <!-- <span v-tooltip="'evtlsned'"> {{ sss.evtlsned }} </span> -->
+            <button class="btn" v-touch:tap="btntapshowctxmenu">swipe-hhh</button>
 
-    <div  style="width: auto; height: 650px;" v-touch:swipe="onSwipeLeftItem">
-        
-        <!-- <groupview/> -->
-        <!-- left: 36% -> 0, width: 64% -> 0  -->
-        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 60px; ">
-            <div style="background-color:#666;">
-                <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
-                    </span>
-                <span title="tabpage list"><select >
+            <span title="tabpage list"><select >
                     <option v-for="val,idx in sss.tabpageons1" :selected="val"> {{ val }}.{{ idx }}</option>
                     </select></span>
 
@@ -566,6 +626,17 @@ const menuData  = {
                     <option>eee</option>
                     <option>www</option>
                 </select></span> -->
+        </div>
+
+    <div  style="width: auto; height: 650px;" v-touch:swipe="onSwipeLeftItem">
+        
+        <!-- <groupview/> -->
+        <!-- left: 36% -> 0, width: 64% -> 0  -->
+        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 60px; ">
+            <div style="background-color:#666;">
+                <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
+                    </span>
+
                 <span><button @click="switchtabpage(0)" >btn0</button></span>
                 <span><button @click="switchtabpage(1)" >btn1</button></span>
                 <span><button @click="switchtabpage(2)" >btn2</button></span>

@@ -6,6 +6,7 @@ import * as vue from 'vue';
 // import { VueVirtualScroller } from 'vue-virtual-scroller';
 import {ssscp} from "../sharestatestore";
 const sss = ssscp(); sss.useval += 1;
+import * as ssg from "../sharestatestore";
 import * as mylig from '../mylib';
 
 vue.onMounted(()=>{mylig.uidebug('mounted')});
@@ -35,14 +36,33 @@ vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
 
 import ContextMenu from '@imengyu/vue3-context-menu'
 
-function btntapshowctxmenu2(id, x: MouseEvent) {
-    mylig.uiinfo(x);
-    console.log(x);
+function btntapshowctxmenu2(id, x: MouseEvent | TouchEvent) {
+    mylig.uiinfo(id, x);
+    console.log(id, x);
+    if (id == undefined || x == undefined) {
+        return;
+    }
+    let posx = 0;
+    let posy = 0;
+    if (x instanceof MouseEvent) {
+        posx = x.clientX;
+        posy = x.clientY;
+    }
+    else if (x instanceof TouchEvent) {
+        let lastpt = x.changedTouches.item(x.changedTouches.length-1);
+        posx = lastpt.clientX;
+        posy = lastpt.clientY;
+    }else {
+        // wtf???
+    }
+    // if (x.button != 2 ) {
+    //     return;
+    // }
     // vuefloatmenumoveto(x.clientY,x.clientX);
     ContextMenu.showContextMenu({
         theme: "default dark",
-    x: x.clientX,
-    y: x.clientY,
+    x: posx,
+    y: posy,
     items: [
         {
         label: "Copy", 
@@ -87,14 +107,38 @@ function btntapshowctxmenu2(id, x: MouseEvent) {
   }); 
 }
 
+function tapcbwrap(id) { return (e)=>{btntapshowctxmenu2(id, e)}; }
+function longtapcbwrap(id) { return (e)=>{btntapshowctxmenu2(id, e)}; }
+
+// change item background
+function holdcbwrap(id) { return (e)=>{
+        let elemid = 'itemtbl'+id;
+        // mylig.uidebug(elemid);
+        let elem = ssg.docelembyid(elemid);
+        elem.style.background = '#3a3a3a';
+    }
+}
+// change item background
+function releasecbwrap(id) { return (e)=>{
+        let elemid = 'itemtbl'+id;
+        // mylig.uidebug(elemid);
+        let elem = ssg.docelembyid(elemid);
+        elem.style.background = '';
+    }
+}
+
 </script>
 
 <template>
 
             <!-- <li v-for="item in items"> -->
             <!-- {{ item }} yyy -->
-            <span v-for="item in sss.msglst" style="width: 100%;" v-on:click="btntapshowctxmenu2(item.title, $event)" :key="item.id" >
-                <table border="0" style=" width: 100%;">
+            <span v-for="item,idx in sss.msglst" style="width: 100%;"  :key="item.id"
+            v-touch:tap="tapcbwrap(item.title)"
+            v-touch:longtap="longtapcbwrap(idx)"
+            v-touch:hold="holdcbwrap(idx)"
+            v-touch:release="releasecbwrap(idx)"   >
+                <table border="0" style=" width: 100%;" :id="'itemtbl'+ idx">
                     <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../../images/border-diamonds.png" width="33px"/>
                          </td>
                         <td style="text-align:start; font-size: 12px; opacity: 0.5;"> feditype </td>
