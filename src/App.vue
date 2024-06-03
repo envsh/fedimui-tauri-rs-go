@@ -557,6 +557,9 @@ const menuData  = {
 
 import { FloatMenu } from "vue-float-menu";
 import "vue-float-menu/dist/vue-float-menu.css";
+import { useDisplay } from "vuetify";
+
+const wndheight = useDisplay().height;
 
 </script>
 
@@ -593,7 +596,7 @@ import "vue-float-menu/dist/vue-float-menu.css";
     </div>
 
         <!-- like toolbar -->
-    <div style="position: absolute;top:30px;" >
+    <div style="height: 30px;" >
          <!-- {{ sss.useval }}  -->
          <span>
         <!-- <button @click="upcnt()">upcnt</button> -->
@@ -605,7 +608,8 @@ import "vue-float-menu/dist/vue-float-menu.css";
                     Isandroid: {{ sss.isandroid }} <br/>
                     evtcnt: {{ sss.rcvevtcnt }}<br/>
                     evtlsned: {{ sss.evtlsned }}<br/>
-                    Count: {{ sss.loglst.length }}
+                    Count: {{ sss.loglst.length }} <br/>
+                    wndheight: {{ wndheight }}
             </template>
             </VDropdown>
         </span>
@@ -629,12 +633,7 @@ import "vue-float-menu/dist/vue-float-menu.css";
                 </select></span> -->
         </div>
 
-    <div  style="width: auto; height: 650px;" v-touch:swipe="onSwipeLeftItem">
-        
-        <!-- <groupview/> -->
-        <!-- left: 36% -> 0, width: 64% -> 0  -->
-        <div style="height:inherit; width: 100%;position: absolute; left: 0%; top: 60px; ">
-            <div style="background-color:#666;">
+        <div style="background-color:#666; height: 30px;">
                 <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
                     </span>
 
@@ -652,25 +651,36 @@ import "vue-float-menu/dist/vue-float-menu.css";
                         Count: {{ sss.loglst.length }}, Last: {{ sss.lastlog }}
                     </template>
                 </VDropdown></span>
+                <!-- <v-spacer></v-spacer> -->
                 <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
-            <div id="rightwin" style="height:89%; width: 100%;">
+
+    <v-layout :max-height="wndheight-120" style="width: auto; " v-touch:swipe="onSwipeLeftItem">
+        <v-main style="min-height: 100px; overflow-y: scroll; ">
+        
+        <!-- <groupview/> -->
+        <!-- left: 36% -> 0, width: 64% -> 0  -->
+        <!-- <div style="width: 100%;position: absolute;  "> -->
+
+            <div id="rightwin" style=" width: 100%;">
                 <div v-show="(sss.tabpageons1)[0]" id="tabpage.page1ui">
                     <Page1/>
                 </div>
 
-                <div v-show="(sss.tabpageons1)[1]" id="tabpage.msglstui" style="height: 100%;">
-                    <div id="msglstscrwin" style="height: 89%; width: 100%; overflow-y: scroll;">
+                <div v-show="(sss.tabpageons1)[1]" id="tabpage.msglstui" >
+                    <div id="msglstscrwin" style=" width: 100%;">
                         <Msgview/>
                     </div>
 
-                    <div style="background-color:darkslategray; position: absolute; top: 550px; width: 100%;">
+                    <v-footer app order="1">
+                    <div style="background-color:darkslategray; width: 100%;">
                         <msginputsend/>
-                    </div>    
+                    </div> 
+                    </v-footer>   
                 </div>
 
-                <div v-show="(sss.tabpageons1)[2]" id="tabpage.groupview"  style="height: 100%; width: 100%;">
+                <div v-show="(sss.tabpageons1)[2]" id="tabpage.groupview"  style=" width: 100%;">
                     <groupview/>
                 </div>
 
@@ -689,13 +699,20 @@ import "vue-float-menu/dist/vue-float-menu.css";
                     <mylogui/>
                 </div>
 
-            </div>
+            <!-- </div> -->
 
         </div>
         
-    </div>
+    </v-main>
+    <v-footer app height="35px">
+        fff
+        <button>ioo</button>
+        <v-spacer></v-spacer>
+        <button>ioo</button>
+    </v-footer>
+    </v-layout>
 
-    <hr/>
+    <!-- <hr/> -->
 
   <!-- <div class="container">
     <Msgview />

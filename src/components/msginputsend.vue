@@ -16,7 +16,7 @@ async function sendmsg() {
     // alert('aaa');
     mylibg.uidebug(sss.msgsndmode + ' ' + sss.msgiptdata);
     if (sss.msgiptdata == '') {
-        toastnote('没有发送消息内容');
+        toastnote('没有发送消息内容，发送类型：' + sss.msgsndmode);
         return;
     }
     let words = "请使用中文回答以下问题： " + sss.msgiptdata;
@@ -80,14 +80,15 @@ function toastnote(txt) {
 
     <span><img src="../../images/favicon.png" width="33px" /><button>btn1</button></span>
 
-    <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="3"
+    <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="2"
             style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;"
             placeholder="输入消息(Input message)。。。"></textarea></span>
 
     <!-- <span><input style="width: 198px;"></span> -->
     <span><button v-on:click="sendmsg()">Send!</button></span>
 
-    <span><button>btn12</button></span>
+    <!-- <span><button>btn12</button></span> -->
+    &nbsp;
 
     <span><select name="ffff" v-model="sss.msgsndmode" v-tooltip="'发送方式，调整发送格式或者发送目标'" on-select="">
             <option>dftim</option>
@@ -101,6 +102,8 @@ function toastnote(txt) {
     <!-- 怎么不好用呢 -->
     <!-- <v-select :options="['Canada', 'United States']"
     style="display: inline-flex;"></v-select> -->
+
+    <!-- <v-spacer></v-spacer> -->
 
     <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px"
             src="../../images/favicon.png" title="SCB: scroll to bottom" /></span>
