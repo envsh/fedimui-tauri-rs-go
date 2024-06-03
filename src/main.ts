@@ -87,9 +87,15 @@ import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 import ContextMenu from '@imengyu/vue3-context-menu'
 vapp.use(ContextMenu);
 
+// floating-vue 没有内置的 dark真是失败
 import 'floating-vue/dist/style.css'
 import FloatingVue from 'floating-vue'
 vapp.use(FloatingVue)
+
+import "vue-select/dist/vue-select.css";
+import vSelect from 'vue-select'
+vapp.component('v-select', vSelect)
+
   
 // https://pinia.vuejs.org/core-concepts/outside-component-usage.html
 // after installing the pinia plugin with app.use(pinia) will work:

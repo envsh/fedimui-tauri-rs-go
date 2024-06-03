@@ -14,6 +14,11 @@ let items3 = sss.msglst;
 
 async function sendmsg() {
     // alert('aaa');
+    mylibg.uidebug(sss.msgsndmode + ' ' + sss.msgiptdata);
+    if (sss.msgiptdata == '') {
+        toastnote('没有发送消息内容');
+        return;
+    }
     let words = "请使用中文回答以下问题： " + sss.msgiptdata;
     // let prms = callfwdgo("sendmsg", ["hello 世界!!!"]);
     let prms = mylibg.callfwdgo("sendmsg", [words]).then((restxt) =>  {
@@ -56,20 +61,49 @@ async function sendmsg() {
 //     console.log(evt);
 // }
 
+import { toast as vtoast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+function toastnote(txt) {
+    const notify = () => {
+    //   vtoast("Wow so easy !", {
+    vtoast(txt, {
+        autoClose: 1634,
+        theme: 'dark',
+        type: 'error',
+      }); // ToastOptions
+    }
+    notify();
+}
 </script>
 
 <template>
 
-    <span><img src="../../images/favicon.png" width="33px"/><button>btn1</button></span>
+    <span><img src="../../images/favicon.png" width="33px" /><button>btn1</button></span>
 
-    <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="3" style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;" placeholder="输入消息(Input message)。。。"></textarea></span>
+    <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="3"
+            style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;"
+            placeholder="输入消息(Input message)。。。"></textarea></span>
 
     <!-- <span><input style="width: 198px;"></span> -->
     <span><button v-on:click="sendmsg()">Send!</button></span>
 
     <span><button>btn12</button></span>
 
-    <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px" src="../../images/favicon.png" title="SCB: scroll to bottom"/></span>
+    <span><select name="ffff" v-model="sss.msgsndmode" v-tooltip="'发送方式，调整发送格式或者发送目标'" on-select="">
+            <option>dftim</option>
+            <option>gptcf</option>
+            <option>gptoa</option>
+            <option>misskey</option>
+            <option>nostr</option>
+            <option>cmd</option>
+        </select></span>
+
+    <!-- 怎么不好用呢 -->
+    <!-- <v-select :options="['Canada', 'United States']"
+    style="display: inline-flex;"></v-select> -->
+
+    <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px"
+            src="../../images/favicon.png" title="SCB: scroll to bottom" /></span>
 
 
 </template>

@@ -597,9 +597,9 @@ import "vue-float-menu/dist/vue-float-menu.css";
          <!-- {{ sss.useval }}  -->
          <span>
         <!-- <button @click="upcnt()">upcnt</button> -->
-            <VDropdown :overflow-padding="60"  auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
+            <VDropdown :overflow-padding="60" auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
             <button @click="reloadui()">reload</button>
-            <template #popper="">
+            <template #popper="" >
                     <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
                     Useval: {{ sss.useval }} <br/>
                     Isandroid: {{ sss.isandroid }} <br/>
@@ -616,7 +616,8 @@ import "vue-float-menu/dist/vue-float-menu.css";
             <button class="btn" v-touch:tap="btntapshowctxmenu">swipe-hhh</button>
 
             <span title="tabpage list"><select >
-                    <option v-for="val,idx in sss.tabpageons1" :selected="val"> {{ val }}.{{ idx }}</option>
+                    <option v-for="val,idx in sss.tabpageons1" :selected="val">
+                        {{ val }}.{{ idx }}</option>
                     </select></span>
 
                 <!-- <span><select name="ffff">
@@ -703,15 +704,21 @@ import "vue-float-menu/dist/vue-float-menu.css";
 
 <style >
 
-
 body {
     background-color: #1a1a1a;
     color: #fafafa;
 }
+.v-popper--theme-dropdown .v-popper__inner {
+    background-color: #1a1a1a !important; 
+    color: #fafafa !important;
+}
+
 </style>
 
 <!-- <style src="@/asserts/css/dark-mode.css"></style> -->
 <style scoped>
+
+
 
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);

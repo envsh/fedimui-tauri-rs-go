@@ -57,7 +57,7 @@ export let ssscp = defineStore({
         // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         msglst: ref([]),  // [object]
         msgiptdata : ref(""),
-        msgsndmode : ref(""), // generalim, gptcf, gptopenai,
+        msgsndmode : ref("dftim"), // generalim, gptcf, gptopenai,
         // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         romlst: ref([]), // [object]
 
