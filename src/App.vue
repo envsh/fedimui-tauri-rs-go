@@ -462,7 +462,8 @@ function btntapshowctxmenu(x,y) {
   }); 
 }
 
-import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
+// import 'floating-vue/dist/style.css'
+// import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
 
 </script>
 
@@ -512,7 +513,14 @@ import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
                 <span><button @click="switchtabpage(3)" >btn3</button></span>
                 <span><button @click="switchtabpage(4)" >btn4</button></span>
                 <span><button @click="switchtabpage(5)" >btn5</button></span>
-                <span><button @click="switchtabpage(6)" v-tooltip="sss.lastlog" >logui</button></span>
+                <span><VDropdown :overflow-padding="60"  auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
+                    <button @click="switchtabpage(6)" >logui</button>
+                <!-- @click="switchtabpage(6)"  v-tooltip="('cnt ' + sss.loglst.length + ' ' +sss.lastlog)" -->
+                    <template #popper="">
+                        <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
+                        Count: {{ sss.loglst.length }}, Last: {{ sss.lastlog }}
+                    </template>
+                </VDropdown></span>
                 <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
             </div>
 
@@ -564,6 +572,8 @@ import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
 </template>
 
 <style >
+
+
 body {
     background-color: #1a1a1a;
     color: #fafafa;
@@ -572,6 +582,7 @@ body {
 
 <!-- <style src="@/asserts/css/dark-mode.css"></style> -->
 <style scoped>
+
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }

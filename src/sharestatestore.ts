@@ -43,12 +43,16 @@ export let ssscp = defineStore({
         items: ref([]),
         items2: ref([]),
         items3: ref([]),
+
         // normal data
         username: ref("Nickname"),
         userident: ref("@ident"),
+        usericonurl: ref(""),
+
         // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         msglst: ref([]),  // [object]
         msgiptdata : ref(""),
+        msgsndmode : ref(""), // generalim, gptcf, gptopenai,
         // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         romlst: ref([]), // [object]
 
@@ -83,6 +87,8 @@ export let ssscp = defineStore({
         lastlog: ref(""),
     }),
     
+    getters: {},
+
     actions: {
         ctor() {
             console.log("sss ctor???");
