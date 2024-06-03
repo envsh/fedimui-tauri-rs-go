@@ -465,14 +465,73 @@ function btntapshowctxmenu(x,y) {
 // import 'floating-vue/dist/style.css'
 // import { Dropdown, Tooltip, Menu, vTooltip } from 'floating-vue';
 
+import { MenuBar } from '@imengyu/vue3-context-menu';
+
+const menuData  = {
+    theme: "default dark",
+    items: [
+    {
+      label: "File",
+      children: [
+        { label: "New" },
+        { label: "Open" },
+        { 
+          label: "Open recent",
+          children: [
+            { label: "File 1...." },
+            { label: "File 2...." },
+            { label: "File 3...." },
+            { label: "File 4...." },
+            { label: "File 5...." },
+          ],
+        },
+        { label: "Save", divided: true },
+        { label: "Save as..." },
+        { label: "Close" },
+        { label: "Exit" },
+      ],
+    },
+    {
+      label: "Edit",
+      children: [
+        { label: "Undo" },
+        { label: "Redo" },
+        { label: "Cut", divided: true },
+        { label: "Copy" },
+        { label: "Find", divided: true },
+        { label: "Replace" },
+      ],
+    },
+    {
+      label: "View",
+      children: [
+        { label: "Zoom in" },
+        { label: "Zoom out" },
+        { label: "Reset zoom" },
+        { label: "Full screent", divided: true },
+        { label: "Find", divided: true },
+        { label: "Replace" },
+      ],
+    },
+    {
+      label: "Help",
+      children: [
+        { label: "About", onClick: ()=>{ mylibg.uidebug("clicked about") } },
+      ],
+    },
+  ]
+};
+
 </script>
 
 <template>
   <!-- <vue-navigation-bar :options="navbarOptions" /> -->
-  <div id="mainmenu">
-  <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;">
-  </vue-dock-menu>
-    </div>
+  <!-- <div id="mainmenu"> -->
+  <!-- <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;"> -->
+<MenuBar :options="menuData" theme="default dark" />
+  <!-- </vue-dock-menu> -->
+    <!-- </div> -->
+    
     <div v-show="sidebarshow" id="sidebarmenu" style="position: absolute; top: 50px;">
   <sidebar-menu :menu="sidebarmenus" @item-click="sidebar_menuitem_clicked" @update:collapsed="sidebar_menu_folder" style="margin: 0px;">
   </sidebar-menu>

@@ -72,8 +72,6 @@ const router = createRouter({
 });
 
 
-
-
 // createApp(App).mount("#app");
 const vapp = createApp(App);
 // let cpx = vapp.component('vue-navigation-bar', VueNavigationBar);

@@ -19,7 +19,7 @@
     // "strict": true,
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
-    "strict": false,
+    // "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true

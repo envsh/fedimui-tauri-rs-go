@@ -20,6 +20,7 @@ genmob:
 apk:
 	NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/ JAVA_HOME=/nix/store/rflj4qrjp5km8kqfwh2s70s64y4d904v-zulu-ca-jdk-17.0.10/ ./node_modules/.bin/tauri android build --apk -t aarch64
 	jarsigner -verify ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+	JAVA_HOME=/nix/store/rflj4qrjp5km8kqfwh2s70s64y4d904v-zulu-ca-jdk-17.0.10/ /opt/android-sdk/build-tools/30.0.3/apksigner sign --ks-pass pass:changeit --ks ../seckeys/apksign_keystore.jks ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
 
 #	NDK_HOME=/usr/local/share/android-ndk ANDROID_HOME=/opt/android-sdk/ JAVA_HOME=/nix/store/rflj4qrjp5km8kqfwh2s70s64y4d904v-zulu-ca-jdk-17.0.10/ npm run tauri android build --target=aarch64-linux-android --verbose
 

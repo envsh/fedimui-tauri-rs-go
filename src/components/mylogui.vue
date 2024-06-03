@@ -10,8 +10,7 @@ vue.onMounted(()=>{mylig.uidebug('mounted')});
 vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
 
 // \see https://runthatline.com/pinia-watch-state-getters-inside-vue-components/
-vue.watch(
-    () => sss.lastlog,
+vue.watch(() => sss.lastlog,
     (oldval) => {
         // 循环了，在这不能调用uidebug
         // mylig.uidebug("watched", "lastlog", oldval.length , "=>", curval.leng\th);

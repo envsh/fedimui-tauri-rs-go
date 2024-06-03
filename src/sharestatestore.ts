@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 // import { storeToRefs } from 'pinia'
 import { ref } from "vue";
+import * as vue from 'vue';
 // import { reactive, toRefs } from "vue";
 
 import { getCurrentInstance } from "vue";
@@ -19,6 +20,10 @@ export function getVueFile() {
 export function getVueVer() {
     let app = getCurrApp();
     return app.version;
+}
+// stv, sss.useval
+export function watchrav(stv, cb) {
+    vue.watch(()=> stv, cb);
 }
 
 // Removes 'readonly' attributes from a type's properties

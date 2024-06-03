@@ -33,13 +33,67 @@ vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
 // console.log(items.length);
 // console.warn("hhehheeddd", sss.useval);
 
+import ContextMenu from '@imengyu/vue3-context-menu'
+
+function btntapshowctxmenu2(id, x: MouseEvent) {
+    mylig.uiinfo(x);
+    console.log(x);
+    // vuefloatmenumoveto(x.clientY,x.clientX);
+    ContextMenu.showContextMenu({
+        theme: "default dark",
+    x: x.clientX,
+    y: x.clientY,
+    items: [
+        {
+        label: "Copy", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item", id);
+        }
+      },
+      {
+        label: "Source", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item");
+        }
+      },
+      {
+        label: "Edit", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item");
+        }
+      },
+      {
+        label: "Delete", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item");
+        }
+      },
+
+    //   { 
+    //     label: "A menu item", 
+    //     onClick: () => {
+    //       mylig.uidebug("You click a menu item");
+    //     }
+    //   },
+    //   { 
+    //     label: "A submenu", 
+    //     children: [
+    //       { label: "Item1" },
+    //       { label: "Item2" },
+    //       { label: "Item3" },
+    //     ]
+    //   },
+    ]
+  }); 
+}
+
 </script>
 
 <template>
 
             <!-- <li v-for="item in items"> -->
             <!-- {{ item }} yyy -->
-            <span v-for="item in sss.msglst" style="width: 100%;" >
+            <span v-for="item in sss.msglst" style="width: 100%;" v-on:click="btntapshowctxmenu2(item.title, $event)" :key="item.id" >
                 <table border="0" style=" width: 100%;">
                     <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;"><img src="../../images/border-diamonds.png" width="33px"/>
                          </td>
