@@ -417,22 +417,56 @@ function sidebar_menu_folder(fold) {
 }
 let sidebarshow = ref(false);
 
-function onSwipeLeftItem(x,y) {
+
+function onSwipeScreen(direction : string, evt : MouseEvent, z) {
+    let x = direction;
+    let y = evt;
     mylibg.uiinfo(x,y);
+    console.log(x,y,z);
 
     if (x == "right") {
-        if (sidebarshow.value != true) {
-            sidebarshow.value = true;
+        let isfromleftedge = false; // todo 区分是显示sidebar还是翻页
+        isfromleftedge = resolvepullsidebar(evt);
+        if (isfromleftedge) {
+            if (sidebarshow.value != true) {
+                sidebarshow.value = true;
+            }
+        }else{
+            nexttabpage(false);
         }
     } if (x == "left") {
         if (sidebarshow.value != false) {
             sidebarshow.value = false;
+        }else{
+            nexttabpage(true);
         }
     } if (x == "bottom") {
-        reloadui();
+        // reloadui(); // 容易误发
     }
 }
+// 左侧1/3宽度以内开始
+// todo 没有办法获取开始x值
+let touchstartx = -1;
+function resolvepullsidebar(evt : MouseEvent) {
+    // if (true) return true; // always return untin got start point
+    if (touchstartx < 0 ) return true;
+    let startx = touchstartx;
+    let wndwdt = wndwidth;
+    let wantx = Math.ceil(wndwdt.value/3.0);
+    mylibg.uidebug('bpos', startx, 'wantx', wantx, 'ok', startx < wantx);
+    if (startx < wantx) {
+        return true;
+    }
+    return false;
+}
 
+function onTouchStart(x : MouseEvent, y) {
+    mylibg.uiinfo(x,y);
+    console.log(x,y);
+
+    let evt = x;
+    touchstartx = evt.clientX;
+}
 
 import ContextMenu from '@imengyu/vue3-context-menu'
 
@@ -559,6 +593,7 @@ import { FloatMenu } from "vue-float-menu";
 import "vue-float-menu/dist/vue-float-menu.css";
 import { useDisplay } from "vuetify";
 
+const wndwidth = useDisplay().width;
 const wndheight = useDisplay().height;
 const calcmainareaheight2 = computed(()=>{
     let sndmsgwndhgt = (sss.tpcuridx1 != 1) ? 55 : 0;
@@ -592,7 +627,11 @@ import menubar2 from './components/menubar2.vue';
         </sidebar-menu>
     </div>
 
-    <v-layout class="rounded rounded-md">
+    <v-layout class="rounded rounded-md" 
+        v-touch:swipe="onSwipeScreen"
+        v-touch:start="onTouchStart"
+        v-touch:press="onTouchStart"
+        >
         <v-app-bar 
         color=""
         height="48"
