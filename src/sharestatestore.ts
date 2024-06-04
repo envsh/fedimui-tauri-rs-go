@@ -48,6 +48,7 @@ export let ssscp = defineStore({
         items: ref([]),
         items2: ref([]),
         items3: ref([]),
+        hideit: ref(false), // v-show="hideit"
 
         // normal data
         username: ref("Nickname"),
@@ -63,7 +64,7 @@ export let ssscp = defineStore({
 
         loglst: ref([]), // [string]
 
-        tpcuridx1: ref(2),
+        tpcuridx1: ref(1),
         tabpageons1: ref([false,true, false, false,false,false,false]), ///////////
         tabpageons2: ref([false,false,true]), ///////////
         tabpageons3: ref([false,false,true]), ///////////

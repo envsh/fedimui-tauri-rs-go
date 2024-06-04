@@ -2,7 +2,7 @@
 
 import { useLogger } from "vue-logger-plugin";
 const log = useLogger();
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { onMounted, onUnmounted } from 'vue'
 // import { isRef } from "vue";
 // import { toRef } from "vue";
@@ -560,165 +560,231 @@ import "vue-float-menu/dist/vue-float-menu.css";
 import { useDisplay } from "vuetify";
 
 const wndheight = useDisplay().height;
+const calcmainareaheight2 = computed(()=>{
+    let sndmsgwndhgt = (sss.tpcuridx1 != 1) ? 55 : 0;
+    let h = wndheight.value-190 + sndmsgwndhgt;
+    return h;
+})
+
+import menubar2 from './components/menubar2.vue';
 
 </script>
 
 <template>
-    <!-- <vue-navigation-bar :options="navbarOptions" /> -->
-    <!-- vue-dock-menu 在 android 上有bug，点击一个菜单之后要等几秒才能再点击, dep -->
-    <!-- <div id="mainmenu">
-    <vue-dock-menu :items="mainmenu_items" :on-selected="mainmenu_selected" style="margin: 0px;">
-      </vue-dock-menu>
-    </div> -->
-<!-- <div style="position: absolute; top:0px;"> -->
-<MenuBar id="mainmenu2" :options="menuData" theme="default dark" />
-<!-- </div> -->
-<div>
-    <float-menu
-        :position="'top right'"
-        :dimension="80" :menu-dimension="{height: 0, width: 0}"
-        :theme="{
+        <div>
+        <float-menu :position="'top right'" :dimension="80" :menu-dimension="{height: 0, width: 0}"
+            :theme="{
             // primary: '#3a3a3a',
             // textColor: '#000',
             // menuBgColor: '#fff',
             // textSelectedColor: '#fff',
             }">
-                {{ sss.useval }} UV  <br/>
-                    {{ sss.isandroid }} IA  <br/>
-                    {{ sss.rcvevtcnt }} EC <br/>
-                    {{ sss.evtlsned }} EL <br/>
-                    {{ sss.loglst.length }} LC
-    </float-menu>
-</div>
+            {{ sss.useval }} UV <br />
+            {{ sss.isandroid }} IA <br />
+            {{ sss.rcvevtcnt }} EC <br />
+            {{ sss.evtlsned }} EL <br />
+            {{ sss.loglst.length }} LC
+        </float-menu>
+    </div>
     <div v-show="sidebarshow" id="sidebarmenu" style="position: absolute; top: 50px;">
-  <sidebar-menu :menu="sidebarmenus" @item-click="sidebar_menuitem_clicked" @update:collapsed="sidebar_menu_folder" style="margin: 0px;">
-  </sidebar-menu>
+        <sidebar-menu :menu="sidebarmenus" @item-click="sidebar_menuitem_clicked"
+            @update:collapsed="sidebar_menu_folder" style="margin: 0px;">
+        </sidebar-menu>
     </div>
 
-        <!-- like toolbar -->
-    <div style="height: 30px;" >
-         <!-- {{ sss.useval }}  -->
-         <span>
-        <!-- <button @click="upcnt()">upcnt</button> -->
-            <VDropdown :overflow-padding="60" auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
-            <button @click="reloadui()">reload</button>
-            <template #popper="" >
+    <v-layout class="rounded rounded-md">
+        <v-app-bar 
+        color=""
+        height="48"
+        flat
+        density="compact"
+        v-tooltip="'top1 appbar for main menu'"
+      >
+      <MenuBar id="mainmenu2" :options="menuData" theme="default dark" />
+    <!-- <menubar2></menubar2> -->
+    </v-app-bar>
+
+      <v-system-bar style="z-index: 0;" color="grey-darken-3" v-tooltip="'system bar for toolbar1'">
+        
+        <div style="height: 30px;">
+        <!-- {{ sss.useval }}  -->
+        <span>
+            <!-- <button @click="upcnt()">upcnt</button> -->
+            <VDropdown :overflow-padding="60" auto-boundary-max-size style="display:inline-flex;"
+                :showTriggers="['hover']" :hideTriggers="[]">
+                <button @click="reloadui()">reload</button>
+                <template #popper="">
                     <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
-                    Useval: {{ sss.useval }} <br/>
-                    Isandroid: {{ sss.isandroid }} <br/>
-                    evtcnt: {{ sss.rcvevtcnt }}<br/>
-                    evtlsned: {{ sss.evtlsned }}<br/>
-                    Count: {{ sss.loglst.length }} <br/>
+                    Useval: {{ sss.useval }} <br />
+                    Isandroid: {{ sss.isandroid }} <br />
+                    evtcnt: {{ sss.rcvevtcnt }}<br />
+                    evtlsned: {{ sss.evtlsned }}<br />
+                    Count: {{ sss.loglst.length }} <br />
                     wndheight: {{ wndheight }}
-            </template>
+                </template>
             </VDropdown>
         </span>
-            <!-- <span>isand {{ sss.isandroid }}</span> -->
-            <!-- &nbsp; -->
-            <!-- <span v-tooltip="'evtcnt'"> {{ sss.rcvevtcnt }} </span> &nbsp; -->
-            <!-- <span v-tooltip="'evtlsned'"> {{ sss.evtlsned }} </span> -->
-            <button class="btn" v-touch:tap="btntapshowctxmenu">swipe-hhh</button>
+        <!-- <span>isand {{ sss.isandroid }}</span> -->
+        <!-- &nbsp; -->
+        <!-- <span v-tooltip="'evtcnt'"> {{ sss.rcvevtcnt }} </span> &nbsp; -->
+        <!-- <span v-tooltip="'evtlsned'"> {{ sss.evtlsned }} </span> -->
+        <button class="btn" v-touch:tap="btntapshowctxmenu">swipe-hhh</button>
 
-            <span title="tabpage list"><select >
-                    <option v-for="val,idx in sss.tabpageons1" :selected="val">
-                        {{ val }}.{{ idx }}</option>
-                    </select></span>
+        <span title="tabpage list"><select>
+                <option v-for="val,idx in sss.tabpageons1" :selected="val">
+                    {{ val }}.{{ idx }}</option>
+            </select></span>
 
-                <!-- <span><select name="ffff">
+        <!-- <span><select name="ffff">
                     <option>ffffff</option>
                     <option>bbb</option>
                     <option selected>tttooo</option>
                     <option>eee</option>
                     <option>www</option>
                 </select></span> -->
-        </div>
 
+        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png"
+                title="SCT: scroll to top" /></span>
+    </div>
+    <v-spacer></v-spacer>
+      </v-system-bar>
+
+      <v-system-bar style="z-index: inherit;" color="grey-darken-3"  v-tooltip="'system bar for toolbar2'">
         <div style="background-color:#666; height: 30px;">
-                <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
-                    </span>
+        <span><button @click="nexttabpage(false)" title="Next tabpage">ntp</button>
+        </span>
 
-                <span><button @click="switchtabpage(0)" >btn0</button></span>
-                <span><button @click="switchtabpage(1)" >btn1</button></span>
-                <span><button @click="switchtabpage(2)" >btn2</button></span>
-                <span><button @click="switchtabpage(3)" >btn3</button></span>
-                <span><button @click="switchtabpage(4)" >btn4</button></span>
-                <span><button @click="switchtabpage(5)" >btn5</button></span>
-                <span><VDropdown :overflow-padding="60"  auto-boundary-max-size style="display:inline-flex;" :showTriggers="['hover']" :hideTriggers="[]">
-                    <button @click="switchtabpage(6)" >logui</button>
+        <span><button @click="switchtabpage(0)">btn0</button></span>
+        <span><button @click="switchtabpage(1)">btn1</button></span>
+        <span><button @click="switchtabpage(2)">btn2</button></span>
+        <span><button @click="switchtabpage(3)">btn3</button></span>
+        <span><button @click="switchtabpage(4)">btn4</button></span>
+        <span><button @click="switchtabpage(5)">btn5</button></span>
+        <span>
+            <VDropdown :overflow-padding="60" auto-boundary-max-size style="display:inline-flex;"
+                :showTriggers="['hover']" :hideTriggers="[]">
+                <button @click="switchtabpage(6)">logui</button>
                 <!-- @click="switchtabpage(6)"  v-tooltip="('cnt ' + sss.loglst.length + ' ' +sss.lastlog)" -->
-                    <template #popper="">
-                        <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
-                        Count: {{ sss.loglst.length }}, Last: {{ sss.lastlog }}
+                <template #popper="">
+                    <!-- <input class="tooltip-content" v-model="sss.loglst.length" placeholder="Tooltip content" /> -->
+                    Count: {{ sss.loglst.length }}, Last: {{ sss.lastlog }}
+                </template>
+            </VDropdown>
+        </span>
+        <!-- <v-spacer></v-spacer> -->
+        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png"
+                title="SCT: scroll to top" /></span>
+    </div>
+    <v-spacer></v-spacer>
+        </v-system-bar>
+        
+  
+      <!-- <v-navigation-drawer
+        color="grey-darken-2"
+        width="72"
+        permanent
+      >lefttt</v-navigation-drawer> -->
+  
+      <!-- <v-navigation-drawer
+        color="grey-darken-1"
+        width="150"
+        permanent
+      >eee</v-navigation-drawer> -->
+  
+      <!-- <v-app-bar 
+        color="grey"
+        height="48"
+        flat
+        density="compact"
+      >top111 
+      
+    </v-app-bar> -->
+          
+
+
+    <!-- <v-system-bar style="z-index: inherit;"></v-system-bar> -->
+
+      <!-- <v-navigation-drawer 
+        color="grey-lighten-1"
+        location="right"
+        width="150"
+        permanent
+      >righttt</v-navigation-drawer> -->
+  
+      <!-- <v-app-bar
+        color="grey-lighten-2"
+        height="48"
+        location="bottom"
+        flat density="compact"
+      >mmm
+    </v-app-bar>
+      <v-app-bar
+        color="grey-lighten-2"
+        height="48"
+        location="bottom"
+        flat density="compact"
+      >nnn
+    </v-app-bar>
+   -->
+
+      <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+
+
+            <div v-show="(sss.tabpageons1)[0]" id="tabpage.page1ui">
+                <Page1 />
+            </div>
+
+            <div v-show="(sss.tabpageons1)[1]" id="msglstscrwin"
+                style=" width: 100%;">
+
+                    <Msgview />
+                <!-- <v-virtual-scroll
+                    :items="sss.msglst"
+                    >
+                    <template v-slot:default="{ item }">
+                         {{ item.title }}
+
+                         <div v-html="item.subtitle"></div>
                     </template>
-                </VDropdown></span>
-                <!-- <v-spacer></v-spacer> -->
-                <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png" title="SCT: scroll to top"/></span>
+                    </v-virtual-scroll> -->
+                     <!-- <v-footer :height="55"></v-footer> -->
             </div>
 
 
-    <v-layout :max-height="wndheight-120" style="width: auto; " v-touch:swipe="onSwipeLeftItem">
-        <v-main style="min-height: 100px; overflow-y: scroll; ">
-        
-        <!-- <groupview/> -->
-        <!-- left: 36% -> 0, width: 64% -> 0  -->
-        <!-- <div style="width: 100%;position: absolute;  "> -->
+            <div v-show="(sss.tabpageons1)[2]" id="tabpage.groupview" style=" width: 100%;">
+                <groupview />
+            </div>
 
-            <div id="rightwin" style=" width: 100%;">
-                <div v-show="(sss.tabpageons1)[0]" id="tabpage.page1ui">
-                    <Page1/>
-                </div>
+            <div v-show="(sss.tabpageons1)[3]" id="tabpage.greetui">
+                <Greet />
+            </div>
+            <div v-show="(sss.tabpageons1)[4]" id="tabpage.aboutui">
+                <aboutui />
+            </div>
 
-                <div v-show="(sss.tabpageons1)[1]" id="tabpage.msglstui" >
-                    <div id="msglstscrwin" style=" width: 100%;">
-                        <Msgview/>
-                    </div>
+            <div v-show="(sss.tabpageons1)[5]" id="tabpage.testui">
+                <testui />
+            </div>
 
-                    <v-footer app order="1">
-                    <div style="background-color:darkslategray; width: 100%;">
-                        <msginputsend/>
-                    </div> 
-                    </v-footer>   
-                </div>
-
-                <div v-show="(sss.tabpageons1)[2]" id="tabpage.groupview"  style=" width: 100%;">
-                    <groupview/>
-                </div>
-
-                <div v-show="(sss.tabpageons1)[3]" id="tabpage.greetui">
-                    <Greet/>
-                </div>
-                <div v-show="(sss.tabpageons1)[4]" id="tabpage.aboutui">
-                    <aboutui/>
-                </div>
+            <div v-show="(sss.tabpageons1)[6]" id="tabpage.mylogui">
+                <mylogui />
+            </div>
             
-                <div v-show="(sss.tabpageons1)[5]" id="tabpage.testui">
-                    <testui/>
-                </div>
+      </v-main>
 
-                <div v-show="(sss.tabpageons1)[6]" id="tabpage.mylogui">
-                    <mylogui/>
-                </div>
-
-            <!-- </div> -->
-
-        </div>
-        
-    </v-main>
-    <v-footer app height="35px">
-        fff
-        <button>ioo</button>
-        <v-spacer></v-spacer>
-        <button>ioo</button>
+      <v-footer app flat location="bottom" density="compact" height="25px" style="background: ;"  v-tooltip="'footer for statusbar1'">
+    <button>ppp</button>
+    <v-spacer></v-spacer>
+    <button>ppp</button>
     </v-footer>
+
+      <v-footer app v-show="sss.tabpageons1[1]" height="55px">
+        <msginputsend></msginputsend>
+      </v-footer>
+
     </v-layout>
-
-    <!-- <hr/> -->
-
-  <!-- <div class="container">
-    <Msgview />
-  </div> -->
-</template>
-
+  </template>
+  
 <style >
 
 body {
