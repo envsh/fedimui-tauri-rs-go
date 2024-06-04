@@ -1,4 +1,7 @@
 
+import { invoke } from "@tauri-apps/api/core";
+// import { debug, level } from 'winston';
+
 // import { useLogger } from "vue-logger-plugin";
 // const log = useLogger();
 // const logger = require('pino')();
@@ -282,10 +285,22 @@ export function errprt(err) {
 function tojson(req:any) {
     return JSON.stringify(req);
 }
-function nowtmstr() : string {
+export function nowtmstr() : string {
     let s = (new Date()).toString();
     return '['+s.substring(0,24)+']';
 }
+export function nowtmstrdft() : string {
+    let s = (new Date()).toString();
+    return s.substring(0,24);
+}
+export function nowtmstriso() : string {
+    let t = new Date();
+    return t.toISOString();
+}
+export function nowtmstrzh() : string {
+    return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+}
+
 // = d1-d2
 function datesubms(d1: Date, d2: Date) {
     return d1.getMilliseconds() - d2.getMilliseconds();
@@ -410,8 +425,6 @@ class mylib {
     
 }
 
-import { invoke } from "@tauri-apps/api/core";
-// import { debug, level } from 'winston';
 
 export default {
     aaa :  2,

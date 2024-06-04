@@ -175,7 +175,17 @@ for (let i = 0; i < 300; i++) {
 }
 // [ {type{subheader,divider}, title, inset,}, {prependAvatar,title,subtitle}]
 
-let romlst = sss.romlst;
+
+// \see https://cloudinary.com/blog/handle-image-asset-bundling-using-vite-in-vuejs#:~:text=Apart%20from%20referencing%20images%20in%20the%20usual%20manner%2C,from%20APIs%2C%20or%20using%20dynamic%20inline%20background%20images.
+import img2_3jpg from "../images2/3.jpg";
+import img2_4jpg from "../images2/4.jpg";
+import img2_5jpg from "../images2/5.jpg";
+import img_cfai_png from "../images/cloudflareai.png";
+import icons_contact_jpg from "../icons/contact.png";
+let tstpics = [img2_3jpg, img2_4jpg, img2_5jpg, img_cfai_png, icons_contact_jpg];
+sss.tstpics = tstpics;
+
+// let romlst = sss.romlst;
 for (let i = 0; i < 30; i++) {
     // console.log(i+3);
     let item0 =  { type: 'divider', inset: true };
@@ -185,13 +195,26 @@ for (let i = 0; i < 30; i++) {
           title: i+ ' Recipe to try',
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           itemid: "mid"+i,
-          dtime: "dtime000",
+          id: i,
+          dtime: "0s", // "dtime000",
+          ctime: mylibg.nowtmstrzh(),
+          feditype: 'test',
+          fedipic: '',
+          username: '',
+          channame: 'testch',
         };
+        item4.prependAvatar = tstpics[Math.ceil(Math.random()*1000000)%(tstpics.length)];
+        // item4.prependAvatar = Math.ceil(Math.random()*1000000) +'wtf' ;
+        item4.fedipic = item4.prependAvatar;
+        item4.username = item4.fedipic.split('/').pop().split('.').shift();
+        if (item4.username.length > 15) {
+            item4.username=item4.username.substring(0,15);
+        }
 
-    (sss.msglst).push(item0);
+    // (sss.msglst).push(item0);
     (sss.msglst).push(item4);
-    romlst.push(item0);
-    romlst.push(item4);
+    (sss.romlst).push(item0);
+    (sss.romlst).push(item4);
 }
 // dont log state var in global????
 // console.warn("hhehheeddd", items.length);
@@ -682,7 +705,7 @@ import menubar2 from './components/menubar2.vue';
                     <option>www</option>
                 </select></span> -->
 
-        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png"
+        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../icons/barbuttonicon_up_2x.png"
                 title="SCT: scroll to top" /></span>
     </div>
     <v-spacer></v-spacer>
@@ -711,7 +734,7 @@ import menubar2 from './components/menubar2.vue';
             </VDropdown>
         </span>
         <!-- <v-spacer></v-spacer> -->
-        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../images/favicon.png"
+        <span><img @click="ssg.msglstScrollHeadTail(true)" width="20px" src="../icons/barbuttonicon_up_2x.png"
                 title="SCT: scroll to top" /></span>
     </div>
     <v-spacer></v-spacer>

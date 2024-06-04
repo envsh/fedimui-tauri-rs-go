@@ -47,12 +47,21 @@ async function sendmsg(x) {
           subtitle: '<span class="text-primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           dtime: '',
           itemid: '',
+          feditype: '',
+          fedipic: '',
+          ctime: mylibg.nowtmstrzh(),
+          username : "cfai",
+          channame : 'general',
         };
 
     msgobj.title = resobj.argv[0];
     msgobj.title = sentmsgrestore(resobj.argv[0]);
     msgobj.subtitle = ccobj.content;
     msgobj.dtime = resobj.dtime;
+    msgobj.feditype = "gptcf";
+    msgobj.fedipic = "../images/cloudflareai.png";
+    msgobj.fedipic = sss.tstpics[3];
+    msgobj.prependAvatar = msgobj.fedipic;
     items3.push(msgobj);
 
     console.log("curmsglstcnt", items3.length);
@@ -88,7 +97,7 @@ function toastnote(txt) {
 
 <template>
 
-    <span><img src="../../images/favicon.png" width="23px" /></span>
+    <span><img src="../../icons/add.png" width="23px" v-tooltip="'添加图片/文件'"/></span>
     <button>btn1</button>
 
     <!-- <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="2"
@@ -100,6 +109,7 @@ function toastnote(txt) {
 
     <!-- <span><input style="width: 198px;"></span> -->
     <span><button v-on:click="sendmsg">Send!</button></span>
+    <img width="33" src="../../icons/cursor_gray64.png" v-tooltip="'Send!'"/>
 
     <!-- <span><button>btn12</button></span> -->
     &nbsp;
@@ -118,7 +128,6 @@ function toastnote(txt) {
     style="display: inline-flex;"></v-select> -->
 
     <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px"
-            src="../../images/favicon.png" title="SCB: scroll to bottom" /></span>
-
+            src="../../icons/barbuttonicon_down_2x.png" title="SCB: scroll to bottom" /></span>
 </template>
 

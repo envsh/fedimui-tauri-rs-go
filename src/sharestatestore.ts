@@ -49,6 +49,7 @@ export let ssscp = defineStore({
         items2: ref([]),
         items3: ref([]),
         hideit: ref(false), // v-show="hideit"
+        tstpics: [], // 图片打包名称, noref
 
         // normal data
         username: ref("Nickname"),
@@ -116,6 +117,21 @@ export let ssscp = defineStore({
     }
 });
 
+export class FediRecord {
+    id : string | number
+    title: string
+    content: string
+    subtitle: string
+    feditype: string
+    fedipic: string
+    prependAvatar: string 
+    ctime: Date
+    username: string
+    userident: string
+    channame: string
+    channel: string
+}
+
 // 无效
 // export let ssscp = storeToRefs(x());
 
@@ -162,4 +178,5 @@ export function wineventwatch(id:string) {
         console.log(id);
     });
 }
+
 
