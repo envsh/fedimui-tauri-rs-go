@@ -12,6 +12,13 @@ vue.onMounted(()=>{mylibg.uidebug("mounted")});
 let items2 = sss.msglst;
 let items3 = sss.msglst;
 
+function sentmsgrestore(msg) {
+    if (msg.startsWith(sss.sndmsgpfxs.dftim)) {
+        return msg.substr(sss.sndmsgpfxs.dftim.length);
+    }
+    return msg;
+}
+
 async function sendmsg(x) {
     // alert('aaa');
     console.log(x);
@@ -20,7 +27,7 @@ async function sendmsg(x) {
         toastnote('没有发送消息内容，发送类型：' + sss.msgsndmode + x);
         return;
     }
-    let words = "请使用中文回答以下问题： " + sss.msgiptdata;
+    let words = sss.sndmsgpfxs["dftim"] + sss.msgiptdata;
     // let prms = callfwdgo("sendmsg", ["hello 世界!!!"]);
     let prms = mylibg.callfwdgo("sendmsg", [words]).then((restxt) =>  {
         console.log(restxt);
@@ -41,7 +48,9 @@ async function sendmsg(x) {
           dtime: '',
           itemid: '',
         };
+
     msgobj.title = resobj.argv[0];
+    msgobj.title = sentmsgrestore(resobj.argv[0]);
     msgobj.subtitle = ccobj.content;
     msgobj.dtime = resobj.dtime;
     items3.push(msgobj);
@@ -50,7 +59,7 @@ async function sendmsg(x) {
     mylibg.addmylog2("curmsglstcnt", items3.length);
     // ssg.msglstScrollHeadTail(false);
     // window.setTimeout();
-    mylibg.runonce(()=>{ssg.msglstScrollHeadTail(false);}, 3333);
+    mylibg.runonce(2333, ()=>{ssg.msglstScrollHeadTail(false);});
     }).catch((err) => {
         mylibg.errprt(err);
         console.log("somerr", err);

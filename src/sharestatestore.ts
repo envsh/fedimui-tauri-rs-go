@@ -59,6 +59,7 @@ export let ssscp = defineStore({
         msglst: ref([]),  // [object]
         msgiptdata : ref(""),
         msgsndmode : ref("dftim"), // generalim, gptcf, gptopenai,
+        sndmsgpfxs : {"dftim": "请使用中文回答以下问题： ",},
         // title,subtitle,prependAvatar,type,inset,itemid,dtime, // see vuelify listview
         romlst: ref([]), // [object]
 
@@ -133,17 +134,21 @@ function dummy() {
 
 export
 async function msglstScrollHeadTail(head : boolean){
-    console.log("chkelem ...", "msglstscrwin");
-    let e = document.getElementById('msglstscrwin');
+    let elemid = "appmainccdiv";
+    // elemid = "app";
+    console.log("chkelem ...", "msglstscrwin", elemid);
+    let e = document.getElementById(elemid);
     if (e == null) {
-        console.log("elem null", "msglstscrwin");
+        console.log("elem null", elemid);
         return;
     }
     console.log(head, e.scrollTop, e.scrollHeight, e);
     if (head ) {
         e.scrollTop = 0;
+        window.scrollTo(0, 0);
     }else {
         e.scrollTop = e.scrollHeight;
+        window.scrollTo(0, e.clientHeight);
     }
     // e.scrollTop = head ? 0 : e.scrollHeight;
 }

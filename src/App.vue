@@ -727,7 +727,7 @@ import menubar2 from './components/menubar2.vue';
     </v-app-bar>
    -->
 
-      <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+      <v-main id="appmainccdiv" class="d-flex align-center justify-center" style="min-height: 300px;">
 
 
             <div v-show="(sss.tabpageons1)[0]" id="tabpage.page1ui">

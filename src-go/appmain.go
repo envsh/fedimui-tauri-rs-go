@@ -139,6 +139,7 @@ func cmdrun(cio *cmdinfo) {
 		} else {
 			bcc, err = io.ReadAll(resp.Body)
 			gopp.ErrPrint(err)
+			log.Println(len(bcc), string(bcc))
 		}
 		// todo add feditype=gptcf
 
