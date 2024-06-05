@@ -42,7 +42,7 @@ export async function devtools() {
 }
 // todo result format
 export
-async function callfwdgo(cmd : string, args : [any]) : Promise<string> {
+async function callfwdgo(cmd : string, ...args : any) : Promise<string> {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     let prm = { jstr: JSON.stringify({cmd: cmd, argc: args.length, argv: args })};
   //   console.log(prm);
@@ -54,7 +54,7 @@ async function callfwdgo(cmd : string, args : [any]) : Promise<string> {
 
 export
 async function cmd1(...args : any) {
-    let respval = await callfwdgo("cmd1", args);
+    let respval = await callfwdgo("cmd1", ...args);
     let jso = JSON.parse(respval);
     console.log(jso.retc, jso.retv);
     addmylog2(jso.retc,  jso.retv);
@@ -64,7 +64,7 @@ async function cmd1(...args : any) {
 export
 async function addnum(val: number | string, ...args : any) : Promise<string> {
     args.push(val);
-    let respval = await callfwdgo("addnum", args);
+    let respval = await callfwdgo("addnum", ...args);
     let jso = JSON.parse(respval);
     console.log(jso.retc, jso.retv);
     addmylog2(jso.retc,  jso.retv);
@@ -77,7 +77,7 @@ async function addnum(val: number | string, ...args : any) : Promise<string> {
 
 export
 async function remlogo(...args : any) /*: Promise<string>*/ {
-    let respval = await callfwdgo("remlog", args);
+    let respval = await callfwdgo("remlog", ...args);
     // let jso = JSON.parse(respval);
     // console.log(jso.retc, jso.retv);
     // addmylog2(jso.retc,  jso.retv);

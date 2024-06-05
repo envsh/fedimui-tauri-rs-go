@@ -14,8 +14,6 @@ import (
 	spjson "github.com/bitly/go-simplejson"
 	"github.com/kitech/gopp"
 	"github.com/kitech/gopp/cgopp"
-
-	_ "github.com/envsh/fedind/guiclish"
 )
 
 /*
@@ -147,6 +145,15 @@ func cmdrun(cio *cmdinfo) {
 
 		cio.Retv = append(cio.Retv, string(bcc))
 
+	case "loadmsg":
+		cond := cio.Argv[0].(string)
+		recs, err := locdb.Loadmsgs(cond)
+		gopp.ErrPrint(err)
+		for i, rec := range recs {
+			bcc, err := json.Marshal(rec)
+			gopp.ErrPrint(err, i)
+			cio.Retv = append(cio.Retv, string(bcc))
+		}
 	default:
 		retval := fmt.Sprintf("cmd %s unsupport, %v", cio.Cmd, gopp.TimeRfc3389ms(nowt))
 		cio.Retv = append(cio.Retv, retval)
@@ -156,11 +163,12 @@ func cmdrun(cio *cmdinfo) {
 	log.Println(cio.Retv, cio.Cmd)
 }
 
-func emitmsgts() {
+// ///// emit event to ts
+func emitmsgts(cmd string, argv ...any) {
 	prm := &ffiparam{}
 	cio := &cmdinfo{}
-	cio.Cmd = gopp.RandomStringPrintable(6)
-	cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
+	cio.Cmd = cmd
+	cio.Argv = argv
 	cio.Argc = len(cio.Argv)
 	scc := gopp.JsonMarshalMust(cio)
 	prm.len = usize(len(scc))
@@ -171,6 +179,12 @@ func emitmsgts() {
 	// C.free(unsafe.Pointer(prm.ptr))
 	cgopp.Cfree(unsafe.Pointer(prm.ptr))
 }
+func emitmsgtsrand() {
+	cio := &cmdinfo{}
+	cio.Cmd = gopp.RandomStringPrintable(6)
+	cio.Argv = append(cio.Argv, mrand.Int()%999, 55.5, 456, "789", gopp.RandStrHex(5))
+	emitmsgts(cio.Cmd, cio.Argv...)
+}
 
 func mainrelax() {
 	log.SetFlags(log.Flags() | log.Lshortfile ^ log.Ldate)
@@ -178,7 +192,7 @@ func mainrelax() {
 	go func() {
 		for i := 0; ; i++ {
 			gopp.SleepSec(2)
-			emitmsgts()
+			emitmsgtsrand()
 			if i > 5 {
 				break
 			}
@@ -194,13 +208,9 @@ func init() {
 			for i := 0; ; i++ {
 				gopp.SleepSec(3)
 				log.Println("whtttt running...", i)
-				emitmsgts()
+				emitmsgtsrand()
 			}
 		}()
 		mainrelax()
 	}
-}
-
-func main() {
-	mainrelax()
 }

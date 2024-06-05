@@ -126,12 +126,15 @@ export class FediRecord {
     feditype: string
     fedipic: string
     prependAvatar: string 
-    ctime: Date
+    // ctime: Date
+    ctime: string
+    dtime: string = '0s'
     username: string
     userident: string
     channame: string
     channel: string
 }
+
 
 // 无效
 // export let ssscp = storeToRefs(x());

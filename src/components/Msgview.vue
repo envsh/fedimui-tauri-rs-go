@@ -140,7 +140,7 @@ function releasecbwrap(id) { return (e)=>{
             v-touch:hold="holdcbwrap(idx)"
             v-touch:release="releasecbwrap(idx)"   >
                 <table border="0" style=" width: 100%;" :id="'itemtbl'+ idx">
-                    <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;" v-tootip="item.fedipic" >
+                    <tr><td rowspan="3" width="33px" style="vertical-align: top; align-content: center;" v-tooltip="'wtf '+item.fedipic" >
                         <!-- <img src="../../images/border-diamonds.png" width="33px"/> -->
                         <img :src="item.prependAvatar" v-bind:title="item.fedipic"  width="33px"/>
                          </td>

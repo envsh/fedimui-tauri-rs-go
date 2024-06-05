@@ -17,6 +17,17 @@ import mylib, * as mylibg from "./mylib";
 import { getTauriVersion } from '@tauri-apps/api/app';
 import { getCurrent } from '@tauri-apps/api/webview';
 // const appVersion = await getVersion();
+// import resources from './components/resources.vue';
+
+// \see https://cloudinary.com/blog/handle-image-asset-bundling-using-vite-in-vuejs#:~:text=Apart%20from%20referencing%20images%20in%20the%20usual%20manner%2C,from%20APIs%2C%20or%20using%20dynamic%20inline%20background%20images.
+import img2_3jpg from "../images2/3.jpg";
+import img2_4jpg from "../images2/4.jpg";
+import img2_5jpg from "../images2/5.jpg";
+import img_cfai_png from "../images/cloudflareai.png";
+import img_mtxlogo_white_png from "../images/matrix-logo-white.svg";
+import icons_contact_jpg from "../icons/contact.png";
+let tstpics = [img2_3jpg, img2_4jpg, img2_5jpg, img_cfai_png, icons_contact_jpg, img_mtxlogo_white_png];
+sss.tstpics = tstpics;
 
 
 let tauri_setup_event_listener_timer = null;
@@ -35,6 +46,7 @@ async function setuptaurieventlisten() {
         sss.evtlsned = true;
         let jso = JSON.parse(evt.payload);
         console.log(evt.event, evt.payload.length, jso , "//");
+        taurieventprocess(jso);
     }).then((unlsnfn)=> {
         sss.tauriunlsnfn = 'thened ' + unlsnfn;
         if (tauri_setup_event_listener_timer != null) {
@@ -52,6 +64,49 @@ async function setuptaurieventlisten() {
     mylibg.uiwarn("after setup tauri event listener @evtchan", sss.tauriunlsnfn);
     log.warn("hehhehhe",123);
     // mylibg.remlogo("tauri setup global event listener @evtchan.", sss.tauriunlsnfn);
+}
+function taurieventprocess(jso) {
+    if (jso.cmd == "IncomeMatrixEvent") {
+        let recstr = jso.argv[0];
+        let item = FediRecordFromGorec(recstr);
+        sss.msglst.push(item);
+        ssg.msglstScrollHeadTail(false);
+    }
+}
+import * as marked from 'marked';
+function FediRecordFromGorec(recstr) {
+    let reco = JSON.parse(recstr);
+    let item = new ssg.FediRecord();
+
+    item.id = reco.Srcid;
+    item.id = reco.Eventid;
+    item.content = reco.Content;
+    // Marked 会给加个 <p></p> 标签
+    item.content = new marked.Marked().parse(reco.Content).toString();
+    item.subtitle = item.content;
+    let cc = item.content + '';
+    cc = cc.trim();
+    console.log(cc.startsWith("<p>"), cc);
+    if (cc.startsWith("<p>") && cc.endsWith("</p>")) {
+        cc = cc.substring(3, cc.length-4);
+        item.content = cc;
+        item.subtitle = cc;
+    }
+    item.title = reco.Title;
+    item.ctime = reco.Ctimems;
+    item.ctime = mylibg.objtmstrmin(new Date(reco.Ctimems));
+    item.username = reco.Seenuser;
+    item.userident = reco.Userident;
+    item.username = reco.Sender;
+    item.feditype = reco.Feditype;
+    item.channame = reco.Channame;
+    item.channel = reco.Channel;
+    item.channame = reco.Roomname;
+    item.channel = reco.Roomid;
+    item.fedipic = sss.tstpics[5];
+    item.prependAvatar = item.fedipic;
+
+    return item;
 }
 let webviewgetsize_timer = null;
 function webviewgetsize() {
@@ -176,14 +231,6 @@ for (let i = 0; i < 300; i++) {
 // [ {type{subheader,divider}, title, inset,}, {prependAvatar,title,subtitle}]
 
 
-// \see https://cloudinary.com/blog/handle-image-asset-bundling-using-vite-in-vuejs#:~:text=Apart%20from%20referencing%20images%20in%20the%20usual%20manner%2C,from%20APIs%2C%20or%20using%20dynamic%20inline%20background%20images.
-import img2_3jpg from "../images2/3.jpg";
-import img2_4jpg from "../images2/4.jpg";
-import img2_5jpg from "../images2/5.jpg";
-import img_cfai_png from "../images/cloudflareai.png";
-import icons_contact_jpg from "../icons/contact.png";
-let tstpics = [img2_3jpg, img2_4jpg, img2_5jpg, img_cfai_png, icons_contact_jpg];
-sss.tstpics = tstpics;
 
 // let romlst = sss.romlst;
 for (let i = 0; i < 30; i++) {
@@ -203,7 +250,7 @@ for (let i = 0; i < 30; i++) {
           username: '',
           channame: 'testch',
         };
-        item4.prependAvatar = tstpics[Math.ceil(Math.random()*1000000)%(tstpics.length)];
+        item4.prependAvatar = sss.tstpics[Math.ceil(Math.random()*1000000)%(sss.tstpics.length)];
         // item4.prependAvatar = Math.ceil(Math.random()*1000000) +'wtf' ;
         item4.fedipic = item4.prependAvatar;
         item4.username = item4.fedipic.split('/').pop().split('.').shift();
@@ -356,7 +403,7 @@ let mainmenu_items = [
         },
         {
             name: "Dev",
-            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "sidebar"}]
+            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "sidebar"},]
         },
         {
             name: "Help",
@@ -598,6 +645,23 @@ const menuData  = {
         { label: "Reload" , onClick: reloadui},
         { label: "Devtools", onClick: mylibg.devtools },
         { label: "Sidebar", onClick: ()=> { sidebarshow.value = !sidebarshow.value;} },
+        { label: "Loadmsg 200", onClick: ()=> {
+            mylibg.callfwdgo("loadmsg", "1=1 order by id desc limit 3").then((resp)=>{
+                mylibg.uidebug('loaded111', resp.length, resp);
+                let jso = JSON.parse(resp);
+                mylibg.uidebug('loaded222', jso.retc, jso.retv);
+                for (let i = 0;i < jso.retc; i++) {
+                    let recstr = jso.retv[i];
+                    let item = FediRecordFromGorec(recstr);
+                    console.log(i, item);
+                    sss.msglst.push(item);
+                }
+                ssg.msglstScrollHeadTail(false);
+            }).catch((err)=>{
+                mylibg.uierror(err);
+            });
+        }
+        },
       ],
     },
     {
@@ -626,9 +690,12 @@ const calcmainareaheight2 = computed(()=>{
 
 import menubar2 from './components/menubar2.vue';
 
+
 </script>
 
 <template>
+    <resources/>
+
         <div>
         <float-menu :position="'top right'" :dimension="80" :menu-dimension="{height: 0, width: 0}"
             :theme="{
@@ -834,7 +901,7 @@ import menubar2 from './components/menubar2.vue';
             
       </v-main>
 
-      <v-footer app flat location="bottom" density="compact" height="25px" style="background: ;"  v-tooltip="'footer for statusbar1'">
+      <v-footer app flat location="bottom" density="compact" height="25px"   v-tooltip="'footer for statusbar1'">
     <button>ppp</button>
     <v-spacer></v-spacer>
     <button>ppp</button>
@@ -856,6 +923,16 @@ body {
 .v-popper--theme-dropdown .v-popper__inner {
     background-color: #1a1a1a !important; 
     color: #fafafa !important;
+}
+a {
+  font-weight: 500;
+  color: #d6d6d6;
+  text-decoration: inherit;
+}
+
+a:hover {
+
+  color: #e6dbdb;
 }
 
 </style>
@@ -914,15 +991,7 @@ body {
   justify-content: center;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
 
-a:hover {
-  color: #535bf2;
-}
 
 h1,h3 {
   text-align: center;

@@ -34,8 +34,12 @@ apksign:
 apkinst:
 	/opt/android-sdk/adbtools/adb install ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
 
+run:
+	rusttrace=1 ./src-go/main
+
 go:
 	cd src-go && go build
+	ls -lh src-go/main
 
 # android aarch64
 golib:
