@@ -14,6 +14,8 @@ import (
 	spjson "github.com/bitly/go-simplejson"
 	"github.com/kitech/gopp"
 	"github.com/kitech/gopp/cgopp"
+
+	_ "github.com/envsh/fedind/guiclish"
 )
 
 /*
