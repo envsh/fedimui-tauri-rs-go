@@ -298,7 +298,15 @@ export function nowtmstriso() : string {
     return t.toISOString();
 }
 export function nowtmstrzh() : string {
-    return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    return objtmstrzh(new Date());
+}
+export function objtmstrzh(dt : Date) : string {
+    return dt.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+}
+// mm:dd hh:II
+export function objtmstrmin(dt : Date) : string {
+    let s = objtmstrzh(dt);
+    return s.substring(5, s.length-3);
 }
 
 // = d1-d2

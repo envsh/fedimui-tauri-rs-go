@@ -197,7 +197,7 @@ for (let i = 0; i < 30; i++) {
           itemid: "mid"+i,
           id: i,
           dtime: "0s", // "dtime000",
-          ctime: mylibg.nowtmstrzh(),
+          ctime: mylibg.objtmstrmin(new Date()),
           feditype: 'test',
           fedipic: '',
           username: '',

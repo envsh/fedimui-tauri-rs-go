@@ -49,7 +49,7 @@ async function sendmsg(x) {
           itemid: '',
           feditype: '',
           fedipic: '',
-          ctime: mylibg.nowtmstrzh(),
+          ctime: mylibg.objtmstrmin(new Date()),
           username : "cfai",
           channame : 'general',
         };
@@ -98,7 +98,7 @@ function toastnote(txt) {
 <template>
 
     <span><img src="../../icons/add.png" width="23px" v-tooltip="'添加图片/文件'"/></span>
-    <button>btn1</button>
+    <button v-tooltip="'emojis'">btn1</button>
 
     <!-- <span><textarea v-model="sss.msgiptdata" v-on:keydown.command.enter="sendmsg()" rows="2"
             style="width:40%; vertical-align: middle; background: transparent; color: white; font-size: 15px;"
@@ -108,8 +108,10 @@ function toastnote(txt) {
         v-model="sss.msgiptdata"></v-textarea>
 
     <!-- <span><input style="width: 198px;"></span> -->
-    <span><button v-on:click="sendmsg">Send!</button></span>
-    <img width="33" src="../../icons/cursor_gray64.png" v-tooltip="'Send!'"/>
+    <!-- <span><button v-on:click="sendmsg">Send!</button></span> -->
+    <v-btn v-on:click="sendmsg" v-tooltip="'Send Message!: '+sss.msgsndmode">
+    |<img  style="width: inherit;" src="../../icons/cursor_gray64.png" />|
+    </v-btn>
 
     <!-- <span><button>btn12</button></span> -->
     &nbsp;
@@ -127,7 +129,7 @@ function toastnote(txt) {
     <!-- <v-select :options="['Canada', 'United States']"
     style="display: inline-flex;"></v-select> -->
 
-    <span><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px"
-            src="../../icons/barbuttonicon_down_2x.png" title="SCB: scroll to bottom" /></span>
+    <span ><img class="button" @click="ssg.msglstScrollHeadTail(false)" width="20px"
+            src="../../icons/barbuttonicon_down_2x.png" v-tooltip="'SCB: scroll to bottom'" /></span>
 </template>
 

@@ -144,10 +144,10 @@ function releasecbwrap(id) { return (e)=>{
                         <!-- <img src="../../images/border-diamonds.png" width="33px"/> -->
                         <img :src="item.prependAvatar" v-bind:title="item.fedipic"  width="33px"/>
                          </td>
-                        <td style="text-align:start; font-size: 12px; opacity: 0.5;" v-tooltip="'feditype'"> {{ item.feditype }}  </td>
+                        <td width="45" style="text-align:start; font-size: 12px; opacity: 0.5;" v-tooltip="'feditype'"> {{ item.feditype }}  </td>
                         <td v-tooltip="'Sender name'">  {{ item.username }} </td>
-                        <td v-tooltip="'chan name'"> {{ item.channame }} </td>
-                        <td style="text-align: end; font-size: 12px; opacity: 0.5;" v-tooltip="'msgtime'">  {{ item.ctime }} </td>
+                        <td width="85" v-tooltip="'chan name'"> {{ item.channame }} </td>
+                        <td width="85" style="text-align: end; font-size: 12px; opacity: 0.5;" v-tooltip="'msgtime'">  {{ item.ctime }} </td>
                         <td rowspan="3" width="33px" style="vertical-align: top;">
                             <img src="../../icons/contact.png" width="33px"/>
                             <!-- <img :src="item.prependAvatar" v-tootip="'wtf'+item.fedipic" width="33px"/> -->
@@ -155,7 +155,8 @@ function releasecbwrap(id) { return (e)=>{
                     </tr>
                     <tr><td colspan="4">
 
-                        <div v-html="item.subtitle"></div>
+                        <span v-html="item.subtitle"></span>
+                        <span style="float: right" v-tooltip="'sending...'"><img width="16" src="../../icons/MessageListSending@2x.png" /></span>
                          <!-- dddd oiajefwef
                         aoiwej faowei fjoiwajefewf
                         aoiwejfaowei fjoiwajefewf

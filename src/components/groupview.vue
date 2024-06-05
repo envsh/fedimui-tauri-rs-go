@@ -18,8 +18,9 @@ vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
     <v-app-bar  floating  v-if="(sss.tabpageons1[2])" flat style="z-index: 0; background:;">
     <!-- 放在pc上，width 35%, 放在 android上，100%。 -->
     <!-- <div style="height:48px; width: 95%; background: cadetblue;"> -->
-            <table border="1" width="100%"><tr><td width="32px">
-                <img src="../../images/favicon.png" width="23px"/></td>
+            <table border="1" width="100%"><tr><td width="45">
+                <img src="../../icons/contact.png" />
+                </td>
                 <td align="left" title="descccccc"> Nickname <br/>&nbsp;
                     <span style="font-size: 12px;">sfffd{{ sss.useval }}</span> </td>
                     <td>
@@ -54,7 +55,7 @@ vue.onUnmounted(()=>{mylig.uidebug('unmounted')});
             <v-virutal-scroll  v-for="item, idx in sss.romlst">
                 <table><tr>
                     <td>
-                        <div v-html="item.subtitle"></div></td>
+                        {{ idx }}. <span v-html="item.subtitle"></span></td>
                 </tr></table>
             </v-virutal-scroll>
 
