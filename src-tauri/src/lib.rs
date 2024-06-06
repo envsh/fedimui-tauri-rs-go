@@ -10,6 +10,14 @@ use tauri::Manager;
 // use log::{debug, error, log_enabled, info, Level};
 use log::{debug, error, warn, info};
 
+fn logger_setup() {
+    env_logger::init();
+    log::set_max_level(log::LevelFilter::Trace); // 无效果？？？
+    // 使用环境变量，RUST_LOG=debug path/to/rsapp
+    // log::info!("{} {}", "hehehe", log::max_level());
+    // println!("log level {}", log::Level);
+}
+
 // demo code
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -18,6 +26,7 @@ fn greet(name: &str) -> String {
 }
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    logger_setup();
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet,callfwdgo,devtools])
@@ -28,10 +37,59 @@ pub fn run() {
             let vno = rspp::globvarput(app);
             unsafe { trapp = vno; }
             debug!("varno {}", vno);
+
+            listenallbuiltinevents(app);
+
             Ok(())
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+// enum TauriEvent {
+//     WINDOW_RESIZED = 'tauri://resize',
+//     WINDOW_MOVED = 'tauri://move',
+//     WINDOW_CLOSE_REQUESTED = 'tauri://close-requested',
+//     WINDOW_DESTROYED = 'tauri://destroyed',
+//     WINDOW_FOCUS = 'tauri://focus',
+//     WINDOW_BLUR = 'tauri://blur',
+//     WINDOW_SCALE_FACTOR_CHANGED = 'tauri://scale-change',
+//     WINDOW_THEME_CHANGED = 'tauri://theme-changed',
+//     WINDOW_CREATED = 'tauri://window-created',
+//     WEBVIEW_CREATED = 'tauri://webview-created',
+//     DRAG = 'tauri://drag',
+//     DROP = 'tauri://drop',
+//     DROP_OVER = 'tauri://drop-over',
+//     DROP_CANCELLED = 'tauri://drag-cancelled'
+// };
+
+fn listenallbuiltinevents(app: & tauri::App) {
+            // \see builtin event here
+            // https://github.com/tauri-apps/tauri/blob/5b769948a81cac333f64c870a470ba6525bd5cd3/tooling/api/src/event.ts#L50
+
+    let cbfn = |evstr : String, evt : tauri::Event| {
+        error!("evt: {}, id: {}, dlen: {}, data: {}", evstr, evt.id(), evt.payload().len(), evt.payload());
+        
+        callfwdgo(evt.payload().to_string());
+    };
+    // todo evtcb not called???
+    // let x = tauri::event::TargetEvent;
+    info!("listen builtin event tauri://* ...");
+    app.listen("component-loaded", move |evt| { 
+        info!("winccc {}", evt.id());
+     });
+    let  mut evtall = "tauri://*".to_string();
+    evtall = "tauri://window-created".to_string();
+    // app.listen(evtall.clone(), move |evt| { cbfn(evtall.to_string(), evt); });
+    evtall = "tauri://webview-created".to_string();
+    app.listen(evtall.clone(), move |evt| { cbfn(evtall.to_string(), evt); });
+    evtall = "tauri://destroyed".to_string();
+    app.listen(evtall.clone(), move |evt| { cbfn(evtall.to_string(), evt); });
+    evtall = "tauri://focus".to_string();
+    app.listen(evtall.clone(), move |evt| { cbfn(evtall.to_string(), evt); });
+    evtall = "tauri://blur".to_string();
+
+    // let mw = app.get_window("main");
 }
 
 ////////// extern
@@ -53,6 +111,7 @@ fn remlogo(line : String) {
     }
 }
 
+// jstr, json string...
 #[tauri::command(async)]
 fn callfwdgo(jstr: String) -> String {
     log::debug!("reqdata={}", jstr);
@@ -194,12 +253,6 @@ static mut ffifuncproxy_rs2go : fn(_v:&rspp::ffiparam) = dummy_fnptrstub;
 #[no_mangle]
 pub extern "C"
 fn taurirs_ffi_runasc(fnptr : fn(v: &rspp::ffiparam)) {
-    env_logger::init();
-    log::set_max_level(log::LevelFilter::Trace); // 无效果？？？
-    // 使用环境变量，RUST_LOG=debug path/to/rsapp
-    // log::info!("{} {}", "hehehe", log::max_level());
-    // println!("log level {}", log::Level);
-
     unsafe {
         // let oldgvlen = rspp::globvarlen();        
         let oldfnptr = ffifuncproxy_rs2go;
