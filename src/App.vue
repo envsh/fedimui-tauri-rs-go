@@ -98,14 +98,18 @@ function FediRecordFromGorec(recstr) {
     item.username = reco.Seenuser;
     item.userident = reco.Userident;
     item.username = reco.Sender;
+    if (item.username=='' || item.username ==null) item.username = reco.Seenuser;
     item.feditype = reco.Feditype;
     item.channame = reco.Channame;
     item.channel = reco.Channel;
-    item.channame = reco.Roomname;
-    item.channel = reco.Roomid;
+    if (item.channame==''||item.channame==null) {item.channame = reco.Roomname};
+    if (item.channel == ''||item.channel ==null) {item.channel = reco.Roomid };
     item.fedipic = sss.tstpics[5];
     item.prependAvatar = item.fedipic;
 
+    console.log(recstr);
+    console.log(reco);
+    console.log(item);
     return item;
 }
 let webviewgetsize_timer = null;
@@ -191,6 +195,20 @@ window.addEventListener('load', (evt) => {
     getrunenvinfo();
 })
 window.addEventListener("resize", ontopwinresize);
+import { open } from '@tauri-apps/plugin-shell';
+// import { open } from '@tauri-apps/';
+document.addEventListener('click', (e : MouseEvent) => {
+    if (e.target instanceof HTMLAnchorElement) {
+        let t = e.target as HTMLAnchorElement;
+        e.preventDefault();
+        // e.preventImmediatePropagation(); // might not be necessary
+        mylibg.uidebug(e, typeof e.target, e.target instanceof HTMLAnchorElement);
+        console.log(e, e.target);
+    
+        open(t.href).then((arg)=>{}).catch(mylibg.errprt);
+  }
+})
+
 // window.load 在 onMounted 之后/之前/不确定???  之之之后
 // onMounted 在 android 上没有执行？？？
 onMounted(() => {
@@ -352,97 +370,6 @@ function switchtabpagebyname(name : string) {
 function upcnt() { sss.useval++; }
 function reloadui() { location.reload(); }
 
-// import brandImage from '../src/assets/images/lockup-color.png'
-// let navbarOptions = {
-//           elementId: "main-navbar",
-//           menuOptionsLeft: [
-//             {
-//               type: "link",
-//               text: "Pricing",
-//             //   path: { name: "pricing"},
-//               iconRight: '<i class="fa fa-long-arrow-right fa-fw"></i>',
-//             },
-//           ],
-//           menuOptionsRight: [
-//             {
-//               type: "button",
-//               text: "Signup",
-//             //   path: { name: "signup" },
-//               class: "button-red"
-//             },
-//           ]
-//     };
-
-import { DockMenu } from "vue-dock-menu";
-import "vue-dock-menu/dist/vue-dock-menu.css";
-ssg.getCurrApp().component('vue-dock-menu', DockMenu);
-// how modify menu runtime???
-let mainmenu_items = [
-        {
-          name: "File",
-          menu: [{ name: "Open"}, {name: "New Window"}, {name: "Exit"}]
-        },
-        {
-          name: "Edit",
-          menu: [{ name: "Cut剪切"}, {name: "Copy"}, {name: "Paste"}]
-        },
-        {
-            name: "Window",
-            iconSlot: "window",
-            menu: [ {name: "Prev <"}, {name: "Next >"}, 
-                    { name : "First <<"},{name: "Last >>"},
-                    { isDivider: true },
-                    // { name: "-------", disable: true},
-                    { name: "group list"},
-                    {name: "message List"}, {name: "logui"}, 
-                    {name: "about"}, {name: "testui"},]
-        },
-        {
-            name: "Misc",
-            menu: [{ name : "upcnt"}, {name: "Scroll Top"}, {name: "Scroll Bottom"}]
-        },
-        {
-            name: "Dev",
-            menu: [{ name : "Reload"}, {name: "DevTools"}, {name: "sidebar"},]
-        },
-        {
-            name: "Help",
-            menu: [{ name : "Reload"},{name: "about"},
-                {name: "ddd"}, {name: "eee"}]
-        },
-
-      ];
-
-let mainmenu_funcs = {
-    "misc>upcnt":  upcnt,
-
-    "window>prev <": ()=>{ nexttabpage(true) },
-    "window>next >": ()=>{ nexttabpage(false)},
-    "window>first <<": ()=> {switchtabpage(0)},
-    "window>last >>": ()=> {switchtabpage(8)},
-    "window>group list": ()=> {switchtabpage(2)},
-    "window>message list": ()=> {switchtabpage(1)}, 
-    "window>logui": ()=> {switchtabpage(6)},
-    "window>about": ()=> {switchtabpage(4)}, 
-    "window>testui": ()=> {switchtabpage(5)}, 
-    "help>about": ()=> {switchtabpage(4)}, 
-
-    "dev>reload": reloadui,
-    "dev>devtools": ()=> { mylibg.devtools() }, // why mylibg.devtools not work
-    "dev>sidebar": ()=> { sidebarshow.value = !sidebarshow.value;},
-
-    "misc>scroll bottom": ()=>{ssg.msglstScrollHeadTail(false)},
-    "misc>scroll top": ()=>{ssg.msglstScrollHeadTail(true)},
-}
-function mainmenu_selected(item) {
-    // console.log("mmsel", item); // {name:, path:}
-    let fn = mainmenu_funcs[item.path];
-    if (fn != null) {
-        fn();
-    }else{
-        mylibg.uiwarn("menu func not found", item.path);
-    }
-}
 
 ////////
 //App.vue
@@ -694,7 +621,7 @@ import menubar2 from './components/menubar2.vue';
 </script>
 
 <template>
-    <resources/>
+    <!-- <resources/> -->
 
         <div>
         <float-menu :position="'top right'" :dimension="80" :menu-dimension="{height: 0, width: 0}"

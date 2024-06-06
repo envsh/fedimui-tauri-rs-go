@@ -313,6 +313,10 @@ export function objtmstrmin(dt : Date) : string {
 function datesubms(d1: Date, d2: Date) {
     return d1.getMilliseconds() - d2.getMilliseconds();
 }
+export function empty(v) {
+    return v=='' || v == null || v == undefined;
+}
+
 // todo, for vue,web
 function getcallerinfo(skip:number)  {
     let err = new Error();

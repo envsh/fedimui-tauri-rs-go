@@ -120,19 +120,24 @@ export let ssscp = defineStore({
 
 export class FediRecord {
     id : string | number
+    itemid: string | number
     title: string
     content: string
     subtitle: string
     feditype: string
+    fedisite: string
     fedipic: string
     prependAvatar: string 
     // ctime: Date
     ctime: string
+    ctimefull: string
     dtime: string = '0s'
     username: string
     userident: string
     channame: string
     channel: string
+
+    linktomsg: string
 }
 
 

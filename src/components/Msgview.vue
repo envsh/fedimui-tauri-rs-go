@@ -77,6 +77,13 @@ function btntapshowctxmenu2(id, x: MouseEvent | TouchEvent) {
         }
       },
       {
+        label: "Copy link", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item", 'Copy link');
+        }
+      },
+
+      {
         label: "Edit", 
         onClick: () => {
           mylig.uidebug("You click a menu item");
@@ -86,6 +93,18 @@ function btntapshowctxmenu2(id, x: MouseEvent | TouchEvent) {
         label: "Delete", 
         onClick: () => {
           mylig.uidebug("You click a menu item");
+        }
+      },
+      {
+        label: "Share", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item", 'Share');
+        }
+      },
+      {
+        label: "Open in browser", 
+        onClick: () => {
+          mylig.uidebug("You click a menu item", 'Open');
         }
       },
 
@@ -145,9 +164,9 @@ function releasecbwrap(id) { return (e)=>{
                         <img :src="item.prependAvatar" v-bind:title="item.fedipic"  width="33px"/>
                          </td>
                         <td width="45" style="text-align:start; font-size: 12px; opacity: 0.5;" v-tooltip="'feditype'"> {{ item.feditype }}  </td>
-                        <td v-tooltip="'Sender name'">  {{ item.username }} </td>
-                        <td width="85" v-tooltip="'chan name'"> {{ item.channame }} </td>
-                        <td width="85" style="text-align: end; font-size: 12px; opacity: 0.5;" v-tooltip="'msgtime'">  {{ item.ctime }} </td>
+                        <td style="opacity: 0.75;" v-tooltip="'Sender name'">  {{ item.username }} </td>
+                        <td width="85" style="opacity: 0.6;" v-tooltip="'chanid:'+item.channel"> {{ item.channame }} </td>
+                        <td width="85" style="text-align: end; font-size: 12px; opacity: 0.5;" v-tooltip="'msgtime:'+item.ctimefull">  {{ item.ctime }} </td>
                         <td rowspan="3" width="33px" style="vertical-align: top;">
                             <img src="../../icons/contact.png" width="33px"/>
                             <!-- <img :src="item.prependAvatar" v-tootip="'wtf'+item.fedipic" width="33px"/> -->
@@ -155,7 +174,7 @@ function releasecbwrap(id) { return (e)=>{
                     </tr>
                     <tr><td colspan="4">
 
-                        <span v-html="item.subtitle"></span>
+                        <span v-html="item.subtitle" style="overflow-wrap: break-word; word-break: break-all;"></span>
                         <span style="float: right" v-tooltip="'sending...'"><img width="16" src="../../icons/MessageListSending@2x.png" /></span>
                          <!-- dddd oiajefwef
                         aoiwej faowei fjoiwajefewf
@@ -164,10 +183,12 @@ function releasecbwrap(id) { return (e)=>{
                         oiweppdfg
                          -->
                     </td></tr>
-                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../../images/border-diamonds.png" width="23px"/><span><a href="">linktofedisite</a></span>
-                        <span> {{  item.itemid }}</span></td>
+                    <tr><td colspan="2" style="text-align: start;font-size: 12px; opacity: 0.5;"><img src="../../images/border-diamonds.png" width="23px"/>
+                        <span><a href="" v-tooltip="'linktofedisite:'+item.fedisite">linktofedisite</a></span>&nbsp;
+                        <span v-tooltip="'itemid:'+item.itemid"> {{  item.itemid }}</span></td>
                         <td colspan="2" style="text-align: end;font-size: 12px; opacity: 0.5;" v-tooltip="'reactions222'">
-                            <span><a href="">linktomsg</a></span>
+                            {{ item.reactions }}
+                            <span><a href="{{ item.linktomsg }}" v-tooltip="'linktomsg:'+item.linktomsg">linktomsg</a></span>&nbsp;
                             <span> {{  item.dtime }}</span>
                         </td></tr>
                 </table>
